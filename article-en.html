@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How cells spend energy, and how molecular motors lift you up — an illustrated guide</title>
+<style>
+  :root{
+    --ink:#1c2b3a; --muted:#5b6b7c; --line:#e2e8ef; --bg:#f6f8fb; --card:#ffffff;
+    --atp:#d94f45; --move:#2f7fd1; --store:#3aa66b; --gold:#d9a520; --purple:#7a5bd1;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB",SimSun,sans-serif;
+    font-size:17px; line-height:1.85;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:0 22px 90px}
+  header.hero{
+    background:linear-gradient(135deg,#1c2b3a 0%,#2f4f6f 55%,#2f7fd1 100%);
+    color:#fff;padding:52px 0 46px;margin-bottom:26px;
+  }
+  header.hero .wrap{padding-bottom:0}
+  .kicker{font-size:14px;letter-spacing:.24em;opacity:.8;margin:0 0 10px}
+  h1{font-size:33px;line-height:1.35;margin:0 0 14px;font-weight:700}
+  .sub{font-size:16px;opacity:.92;margin:0 0 22px}
+  .hero-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:26px}
+  .hero-card{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);
+    border-radius:12px;padding:14px 16px}
+  .hero-card b{display:block;font-size:15px;margin-bottom:4px}
+  .hero-card span{font-size:14px;opacity:.9;line-height:1.6}
+  h2{font-size:26px;margin:56px 0 8px;padding-top:14px;border-top:3px solid var(--ink)}
+  h2 .num{color:var(--move);font-size:20px;margin-right:8px}
+  h3{font-size:20px;margin:32px 0 8px;color:#22384d}
+  h4{font-size:17.5px;margin:22px 0 6px;color:#2f4f6f}
+  p{margin:10px 0}
+  ul,ol{margin:10px 0 10px 4px;padding-left:26px}
+  li{margin:6px 0}
+  a{color:var(--move)}
+  code{background:#eef3fb;border-radius:5px;padding:1px 6px;font-size:15px;
+    font-family:Consolas,"Courier New",monospace}
+  .fig{margin:26px 0 30px;background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:14px 14px 10px;box-shadow:0 2px 10px rgba(28,43,58,.05)}
+  .fig img,.fig svg{width:100%;height:auto;display:block;border-radius:8px}
+  .fig figcaption{font-size:14.5px;color:var(--muted);padding:10px 6px 2px;line-height:1.7}
+  .fig figcaption b{color:var(--ink)}
+  .note,.key,.trap,.calc{border-radius:12px;padding:16px 20px;margin:20px 0;font-size:16.5px}
+  .key{background:#eef7f1;border-left:6px solid var(--store)}
+  .note{background:#eef3fb;border-left:6px solid var(--move)}
+  .trap{background:#fdf1e6;border-left:6px solid var(--gold)}
+  .calc{background:#fdeeec;border-left:6px solid var(--atp)}
+  .note b,.key b,.trap b,.calc b{color:#17304a}
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-size:15.5px;background:#fff}
+  caption{caption-side:top;text-align:left;font-size:14.5px;color:var(--muted);padding-bottom:8px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#22384d;color:#fff;font-weight:600}
+  tr:nth-child(even) td{background:#f8fafc}
+  .toc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 24px;margin:8px 0 10px}
+  .toc h4{margin:0 0 8px}
+  .toc ol{columns:2;column-gap:34px;margin:0;padding-left:22px;font-size:16px}
+  @media(max-width:700px){.toc ol{columns:1}h1{font-size:26px}h2{font-size:22px}body{font-size:16px}}
+  details{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:12px 0}
+  summary{cursor:pointer;font-weight:600;color:#22384d}
+  details[open] summary{margin-bottom:8px}
+  .tag{display:inline-block;font-size:13px;padding:2px 9px;border-radius:20px;background:#eef3fb;
+    color:var(--move);margin-right:6px}
+  .small{font-size:14.5px;color:var(--muted)}
+  .refs{font-size:15px;color:var(--muted)}
+  .refs li{margin:8px 0}
+  hr.soft{border:0;border-top:1px dashed var(--line);margin:34px 0}
+  @media print{
+    body{background:#fff;font-size:12.5px}
+    header.hero{background:#22384d !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    h2{page-break-after:avoid}.fig{page-break-inside:avoid}
+  }
+
+  .langbar{position:fixed;right:18px;top:14px;z-index:20;display:flex;gap:8px;align-items:center}
+  .langbar a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-size:13.5px;
+    padding:8px 14px;border-radius:20px;border:1px solid #bcd4ee;background:#fff;color:#1c2b3a;
+    box-shadow:0 6px 18px rgba(28,43,58,.12)}
+  .langbar a.on{background:linear-gradient(135deg,#2f7fd1,#d94f45);color:#fff;border-color:transparent}
+  .langbar .hint{font-size:12px;color:#5b6b7c}
+  @media print{.langbar{display:none}}
+
+  .langbar{position:fixed;right:18px;top:14px;z-index:20;display:flex;gap:8px;align-items:center}
+  .langbar a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-size:13.5px;
+    padding:8px 14px;border-radius:20px;border:1px solid #bcd4ee;background:#fff;color:#1c2b3a;
+    box-shadow:0 6px 18px rgba(28,43,58,.12)}
+  .langbar a.on{background:linear-gradient(135deg,#2f7fd1,#d94f45);color:#fff;border-color:transparent}
+  .langbar .hint{font-size:12px;color:#5b6b7c}
+  @media print{.langbar{display:none}}
+</style>
+</head>
+<body>
+
+<div class="langbar">
+  <span class="hint">Language</span>
+  <a href="article.html">中文</a>
+  <a class="on" href="article-en.html">EN</a>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker">ZERO-BACKGROUND ILLUSTRATED GUIDE · CELL ENERGY × MOLECULAR MOTORS × MACROSCOPIC WORK</p>
+    <h1>How cells spend energy, and how molecular motors lift you up</h1>
+    <p class="sub">From a meal → ATP → one “power stroke” of a myosin head → a 10 cm muscle contraction → a 20 kg barbell leaving the floor.<br>
+      This long read uses figures, numbers and analogies to explain the whole chain, and to balance the microscopic
+      “piconewton · nanometre” books against the macroscopic “joule · newton” ones.</p>
+    <div class="hero-grid">
+      <div class="hero-card"><b>1 ATP</b><span>≈ 8×10⁻²⁰ J, enough for one 10 nm stroke</span></div>
+      <div class="hero-card"><b>1 myosin head</b><span>force ≈ 4 pN, step ≈ 10 nm</span></div>
+      <div class="hero-card"><b>10¹⁷ motors</b><span>in parallel and in series, giving hundreds of newtons</span></div>
+      <div class="hero-card"><b>efficiency ≈ 22%</b><span>the other 78% becomes heat — that is why you sweat</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="toc">
+  <h4>Contents</h4>
+  <ol>
+    <li><a href="#s0">60-second overview (start here)</a></li>
+    <li><a href="#s0b">The whole story in 5 sentences</a></li>
+    <li><a href="#s1">The big picture: your body’s energy pipeline</a></li>
+    <li><a href="#s2">How a cell turns food into ATP</a></li>
+    <li><a href="#s3">Six nested layers: from muscle to filaments</a></li>
+    <li><a href="#s4">Molecular motors: the cell’s porters and rowers</a></li>
+    <li><a href="#s5">The cross-bridge cycle: a full accounting of one stroke</a></li>
+    <li><a href="#s6">From tiny motion to big force: two multiplications</a></li>
+    <li><a href="#s7">Lifting a barbell: the energy ledger of one lift</a></li>
+    <li><a href="#s8">Mapping onto macroscopic physics: work, power, efficiency, heat</a></li>
+    <li><a href="#s9">Common misconceptions and a self-test</a></li>
+    <li><a href="#s10">Appendix: quick-reference data and sources</a></li>
+  </ol>
+</div>
+
+<h2 id="s0"><span class="num">00</span>60-second overview (start here)</h2>
+
+<p>If you only have a minute, hold on to this four-stage picture:</p>
+
+<table>
+  <caption>Table 0　The whole panorama in one minute</caption>
+  <tr><th>Stage</th><th>What happens</th><th>In everyday words</th></tr>
+  <tr>
+    <td><b>① Get cash</b><br>(cellular respiration)</td>
+    <td>Glucose and fat are dismantled step by step inside mitochondria, and the energy is stored in ATP (about 40% stored, about 60% lost as heat)</td>
+    <td>Change your salary (food) into small coins (ATP). The coin jar is tiny, so you withdraw as you spend</td>
+  </tr>
+  <tr>
+    <td><b>② Pay</b><br>(ATP hydrolysis)</td>
+    <td>ATP → ADP + Pi, releasing about 8×10⁻²⁰ J</td>
+    <td>One coin into the motor — enough for exactly one small step</td>
+  </tr>
+  <tr>
+    <td><b>③ Do the work</b><br>(molecular motors)</td>
+    <td>The myosin head grabs the thin filament and rotates about 70°, pulling it about 10 nm with about 4 pN of force</td>
+    <td>Countless hands rowing together; each hand moves a billionth of a centimetre</td>
+  </tr>
+  <tr>
+    <td><b>④ See the result</b><br>(amplified to the macroscopic)</td>
+    <td>10¹⁷ hands add force in parallel and 10⁵ sarcomeres add displacement in series, then tendons and bones act as levers</td>
+    <td>It all adds up to hundreds of newtons and tens of centimetres — the barbell leaves the floor</td>
+  </tr>
+</table>
+
+<div class="key">
+  <b>In one line:</b> ATP is the small change, the motors are the hands, the filaments are the ropes, the sarcomere is the knot,
+  the tendon is the cable, the skeleton is the lever and the brain is the starting gun. Lifting a barbell is just
+  10¹⁷ hands each moving 10 nanometres, adding up to one metre. And throughout, strictly:
+  <b>chemical energy eaten = work done on the outside + heat released</b> (about 78% becomes heat — hence the sweat).
+</div>
+
+<h2 id="s0b"><span class="num">00⁺</span>The whole story in 5 sentences</h2>
+
+<ol>
+  <li><b>The body does not run on fuel directly; it runs on cash, and the cash is ATP.</b> Sugar and fat are savings, mitochondria are the ATM, and ATP is the only small change a cell can spend immediately. The jar is tiny, so it must be refilled as it is spent.</li>
+  <li><b>One ATP hydrolysis releases only about 8×10⁻²⁰ J</b> — absurdly little, roughly enough to lift a single bacterium by 8 micrometres. So a cell cannot light a bonfire; it can only pay in small instalments.</li>
+  <li><b>Molecular motors turn those instalments into motion.</b> A myosin head grabs, pulls once — about 10 nm of displacement and about 4 piconewtons (4×10⁻¹² N) of force — and one ATP is spent per cycle.</li>
+  <li><b>Macroscopic force comes from numbers:</b> about 10¹⁷ motors in parallel (adding force) plus 10⁵ sarcomeres in series (adding displacement), amplified further by tendons and bones, gives 200–400 N of pull and tens of centimetres of movement.</li>
+  <li><b>Microscopic and macroscopic books balance:</b> chemical energy eaten = work done on the outside + heat released. Muscle is about 22% efficient and the other ~78% becomes heat — which is exactly why your face flushes and you sweat when you lift.</li>
+</ol>
+
+<div class="key">
+  <b>Memory hook:</b> ATP is the coin, the motor is the hand, the filament is the rope, the sarcomere is the knot,
+  the tendon is the cable, the skeleton is the lever, and the brain is the starting gun. Lifting is what happens when
+  10¹⁷ hands each move 10 nanometres and every one of those motions is added up.
+</div>
+
+<h2 id="s1"><span class="num">01</span>The big picture: your body’s energy pipeline</h2>
+
+<p>First, the geography. Energy changes hands four times inside you:</p>
+<p style="text-align:center;font-size:16.5px">
+<b>Food (chemical energy)</b> → digestion → <b>cellular respiration (mitochondria)</b> → <b>ATP (universal cash)</b> → <b>molecular motors (force)</b> → <b>macroscopic motion (lifting, walking, heartbeat)</b>
+</p>
+
+<figure class="fig">
+  <img src="assets/en/fig01_energy_flow_en.png" alt="The body's energy pipeline: from food to ATP to muscle contraction">
+  <figcaption><b>Figure 1</b>　Energy changes hands four times inside the body. Note two key numbers: only about 40% of the energy from respiration is banked in ATP and about 60% becomes heat at once; and each cell holds only about two seconds’ worth of ATP, so it must be made as it is used.</figcaption>
+</figure>
+
+<figure class="fig">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="100%" height="auto" preserveAspectRatio="xMidYMid meet" font-family="Microsoft YaHei, SimSun, sans-serif">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d94f45"/>
+    </marker>
+    <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#9aa7b4"/>
+    </marker>
+    <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2f7fd1"/>
+    </marker>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#d94f45"/><stop offset="100%" stop-color="#7a5bd1"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="640" fill="#ffffff"/>
+  <text x="600" y="42" text-anchor="middle" font-size="27" font-weight="bold" fill="#1c2b3a" data-zh="从 1 个 ATP 分子到举起 100 公斤：一条被放大 10²⁰ 倍的因果链" data-en="From one ATP molecule to lifting 100 kg: a causal chain amplified 10^20 times">从 1 个 ATP 分子到举起 100 公斤：一条被放大 10²⁰ 倍的因果链</text>
+  <text x="600" y="72" text-anchor="middle" font-size="15" fill="#5b6b7c" data-zh="每一次分子级的“划桨”只有 10 纳米、4 皮牛的力；把 10¹⁷ 次这样的动作并联、串联起来，就是杠铃离地。" data-en="Each molecular stroke is only 10 nm and 4 pN; put 10^17 of them in parallel and series and the barbell leaves the floor.">每一次分子级的“划桨”只有 10 纳米、4 皮牛的力；把 10¹⁷ 次这样的动作并联、串联起来，就是杠铃离地。</text>
+
+  <!-- ============ 第 1 站：ATP ============ -->
+  <rect x="30" y="112" width="250" height="196" rx="14" fill="#fdeeec" stroke="#d94f45" stroke-width="2"/>
+  <text x="155" y="140" text-anchor="middle" font-size="16" font-weight="bold" fill="#d94f45" data-zh="① 化学能：1 个 ATP" data-en="1 Chemical energy: one ATP">① 化学能：1 个 ATP</text>
+  <circle cx="80" cy="190" r="15" fill="#7ac0e8" stroke="#1c2b3a"/>
+  <circle cx="120" cy="190" r="15" fill="#4a9bd6" stroke="#1c2b3a"/>
+  <circle cx="160" cy="190" r="15" fill="#d94f45" stroke="#1c2b3a"/>
+  <line x1="95" y1="190" x2="105" y2="190" stroke="#1c2b3a" stroke-width="3"/>
+  <line x1="135" y1="190" x2="145" y2="190" stroke="#1c2b3a" stroke-width="3"/>
+  <text x="80" y="196" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold">α</text>
+  <text x="120" y="196" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold">β</text>
+  <text x="160" y="196" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold">γ</text>
+  <text x="196" y="196" font-size="14" fill="#1c2b3a" data-zh="+ 腺苷" data-en="+ adenosine">+ 腺苷</text>
+  <text x="155" y="228" text-anchor="middle" font-size="14" fill="#1c2b3a">ATP + H₂O → ADP + Pi</text>
+  <text x="155" y="252" text-anchor="middle" font-size="14" fill="#d94f45" font-weight="bold" data-zh="释放 ≈ 8×10⁻²⁰ J" data-en="releases ~ 8x10^-20 J">释放 ≈ 8×10⁻²⁰ J</text>
+  <text x="155" y="278" text-anchor="middle" font-size="12" fill="#5b6b7c" data-zh="≈ 4 pN × 10 nm，够一次划桨" data-en="~ 4 pN x 10 nm: one stroke">≈ 4 pN × 10 nm，够一次划桨</text>
+  <text x="155" y="298" text-anchor="middle" font-size="12" fill="#5b6b7c" data-zh="（约一半变成热）" data-en="(about half becomes heat)">（约一半变成热）</text>
+
+  <line x1="283" y1="210" x2="325" y2="210" stroke="#9aa7b4" stroke-width="3" marker-end="url(#ag)"/>
+
+  <!-- ============ 第 2 站：肌球蛋白划桨 ============ -->
+  <rect x="330" y="112" width="330" height="196" rx="14" fill="#f4f0fd" stroke="#7a5bd1" stroke-width="2"/>
+  <text x="495" y="140" text-anchor="middle" font-size="16" font-weight="bold" fill="#7a5bd1" data-zh="② 分子马达：肌球蛋白头“划桨”" data-en="2 Molecular motor: the myosin head strokes">② 分子马达：肌球蛋白头“划桨”</text>
+  <!-- 细丝 -->
+  <line x1="360" y1="252" x2="630" y2="252" stroke="#2f7fd1" stroke-width="8" stroke-linecap="round"/>
+  <text x="495" y="276" text-anchor="middle" font-size="12" fill="#2f7fd1" data-zh="肌动蛋白细丝（粗 7 nm）" data-en="actin filament (7 nm)">肌动蛋白细丝（粗 7 nm）</text>
+  <!-- 粗肌丝 -->
+  <rect x="430" y="196" width="140" height="12" rx="6" fill="#7a5bd1"/>
+  <text x="592" y="184" font-size="12" fill="#7a5bd1" text-anchor="middle" data-zh="粗肌丝" data-en="thick filament">粗肌丝</text>
+  <!-- 三个带颈部的头部（绿色） -->
+  <g stroke="#3aa66b" stroke-width="4" fill="#3aa66b">
+    <line x1="446" y1="204" x2="452" y2="232"/>
+    <line x1="495" y1="204" x2="501" y2="232"/>
+    <line x1="544" y1="204" x2="550" y2="232"/>
+  </g>
+  <circle cx="453" cy="238" r="8" fill="#3aa66b" stroke="#1c2b3a"/>
+  <circle cx="502" cy="238" r="8" fill="#3aa66b" stroke="#1c2b3a"/>
+  <circle cx="551" cy="238" r="8" fill="#3aa66b" stroke="#1c2b3a"/>
+  <path d="M466,238 q10,-10 20,0" stroke="#d94f45" stroke-width="2.5" fill="none" marker-end="url(#ah)"/>
+  <text x="495" y="170" text-anchor="middle" font-size="12" fill="#3aa66b" data-zh="头部旋转约 70°，拖动细丝" data-en="the head rotates ~70 deg and pulls the filament">头部旋转约 70°，拖动细丝</text>
+  <text x="495" y="300" text-anchor="middle" font-size="13" fill="#1c2b3a" font-weight="bold" data-zh="每循环 1 个 ATP，走 10 nm，出力 4 pN" data-en="1 ATP per cycle, 10 nm per step, 4 pN of force">每循环 1 个 ATP，走 10 nm，出力 4 pN</text>
+
+  <line x1="663" y1="210" x2="705" y2="210" stroke="#9aa7b4" stroke-width="3" marker-end="url(#ag)"/>
+
+  <!-- ============ 第 3 站：肌节滑行 ============ -->
+  <rect x="710" y="112" width="210" height="196" rx="14" fill="#fff6ee" stroke="#e8833a" stroke-width="2"/>
+  <text x="815" y="140" text-anchor="middle" font-size="16" font-weight="bold" fill="#e8833a" data-zh="③ 肌节缩短" data-en="3 The sarcomere shortens">③ 肌节缩短</text>
+  <line x1="736" y1="182" x2="736" y2="262" stroke="#37474f" stroke-width="4"/>
+  <line x1="894" y1="182" x2="894" y2="262" stroke="#37474f" stroke-width="4"/>
+  <text x="736" y="176" text-anchor="middle" font-size="11" fill="#37474f" data-zh="Z 线" data-en="Z-disc">Z 线</text>
+  <text x="894" y="176" text-anchor="middle" font-size="11" fill="#37474f" data-zh="Z 线" data-en="Z-disc">Z 线</text>
+  <line x1="736" y1="206" x2="836" y2="206" stroke="#2f7fd1" stroke-width="5"/>
+  <line x1="794" y1="240" x2="894" y2="240" stroke="#2f7fd1" stroke-width="5"/>
+  <rect x="784" y="214" width="62" height="8" rx="4" fill="#7a5bd1"/>
+  <text x="815" y="286" text-anchor="middle" font-size="12" fill="#e8833a" font-weight="bold" data-zh="细丝滑向中央" data-en="the thin filament slides inward">细丝滑向中央</text>
+  <text x="815" y="300" text-anchor="middle" font-size="11" fill="#5b6b7c">2.2 µm → 1.6 µm</text>
+
+  <line x1="923" y1="210" x2="965" y2="210" stroke="#9aa7b4" stroke-width="3" marker-end="url(#ag)"/>
+
+  <!-- ============ 第 4 站：举起杠铃 ============ -->
+  <rect x="970" y="112" width="200" height="196" rx="14" fill="#eef3fb" stroke="#2f7fd1" stroke-width="2"/>
+  <text x="1070" y="140" text-anchor="middle" font-size="16" font-weight="bold" fill="#2f7fd1" data-zh="④ 宏观做功" data-en="4 Macroscopic work">④ 宏观做功</text>
+  <!-- 举重小人 -->
+  <g stroke="#1c2b3a" stroke-width="5" fill="none" stroke-linecap="round">
+    <circle cx="1070" cy="176" r="13" fill="#1c2b3a" stroke="none"/>
+    <line x1="1070" y1="189" x2="1070" y2="240"/>
+    <line x1="1070" y1="240" x2="1052" y2="272"/>
+    <line x1="1070" y1="240" x2="1088" y2="272"/>
+    <line x1="1070" y1="205" x2="1050" y2="182"/>
+    <line x1="1070" y1="205" x2="1090" y2="182"/>
+  </g>
+  <line x1="1026" y1="180" x2="1114" y2="180" stroke="#37474f" stroke-width="6"/>
+  <rect x="1018" y="166" width="14" height="28" rx="4" fill="#5b6b7c"/>
+  <rect x="1108" y="166" width="14" height="28" rx="4" fill="#5b6b7c"/>
+  <text x="1070" y="298" text-anchor="middle" font-size="12" fill="#2f7fd1" font-weight="bold" data-zh="对外做功 196 J" data-en="external work 196 J">对外做功 196 J</text>
+  <text x="1070" y="314" text-anchor="middle" font-size="11" fill="#5b6b7c">20 kg × 1 m</text>
+
+  <!-- ============ 下方：放大倍数与时间尺度 ============ -->
+  <rect x="30" y="340" width="1140" height="120" rx="14" fill="#f7f9fc" stroke="#dfe6ee"/>
+  <text x="600" y="368" text-anchor="middle" font-size="15" font-weight="bold" fill="#1c2b3a" data-zh="放大倍数一览（数量级估算，用于建立直觉）" data-en="Amplification at a glance (order-of-magnitude, for intuition)">放大倍数一览（数量级估算，用于建立直觉）</text>
+  <g font-size="13" fill="#1c2b3a">
+    <text x="60" y="398" data-zh="马达数量" data-en="number of motors">马达数量</text>
+    <text x="60" y="424" font-weight="bold" fill="#7a5bd1" data-zh="10¹⁷ 个肌球蛋白头" data-en="10^17 myosin heads">10¹⁷ 个肌球蛋白头</text>
+    <text x="330" y="398" data-zh="单步位移" data-en="step size">单步位移</text>
+    <text x="330" y="424" font-weight="bold" fill="#7a5bd1">10 nm = 10⁻⁸ m</text>
+    <text x="560" y="398" data-zh="串并联总位移" data-en="total displacement in series">串并联总位移</text>
+    <text x="560" y="424" font-weight="bold" fill="#7a5bd1" data-zh="10⁵ × 10 nm = 1 mm（肌节层）" data-en="10^5 x 10 nm = 1 mm (sarcomere level)">10⁵ × 10 nm = 1 mm（肌节层）</text>
+    <text x="900" y="398" data-zh="单马达力" data-en="force per motor">单马达力</text>
+    <text x="900" y="424" font-weight="bold" fill="#7a5bd1">4 pN = 4×10⁻¹² N</text>
+  </g>
+  <g font-size="13" fill="#1c2b3a">
+    <text x="60" y="450" data-zh="宏观结果：" data-en="Macroscopic result: ">宏观结果：</text>
+    <text x="145" y="450" fill="#2f7fd1" font-weight="bold" data-zh="1 块肱二头肌可产生 200–400 N 拉力，一次动作移动几十厘米——放大约 10¹² 倍（力）与 10⁷ 倍（位移）。" data-en="one biceps gives 200-400 N and moves tens of centimetres: about 10^12x in force and 10^7x in displacement.">1 块肱二头肌可产生 200–400 N 拉力，一次动作移动几十厘米——放大约 10¹² 倍（力）与 10⁷ 倍（位移）。</text>
+  </g>
+
+  <!-- 底部一句话 -->
+  <rect x="30" y="480" width="1140" height="130" rx="14" fill="#fdeeec" stroke="#d94f45" stroke-width="2"/>
+  <text x="600" y="512" text-anchor="middle" font-size="16" font-weight="bold" fill="#d94f45" data-zh="这就是全部秘密：不要指望 1 个马达举起杠铃" data-en="That is the whole secret: do not expect one motor to lift a barbell">这就是全部秘密：不要指望 1 个马达举起杠铃</text>
+  <text x="600" y="544" text-anchor="middle" font-size="14" fill="#1c2b3a" data-zh="ATP 提供“一次性付款”（约 8×10⁻²⁰ J），肌球蛋白头把它换成 10 nm 的位移和 4 pN 的力；" data-en="ATP pays once (about 8x10^-20 J); the myosin head turns it into 10 nm of movement and 4 pN of force;">ATP 提供“一次性付款”（约 8×10⁻²⁰ J），肌球蛋白头把它换成 10 nm 的位移和 4 pN 的力；</text>
+  <text x="600" y="570" text-anchor="middle" font-size="14" fill="#1c2b3a" data-zh="10¹⁷ 个这样的“付款”按同一方向并行、串联地累加，再经肌腱与骨骼的杠杆放大，就成为你看到的举重。" data-en="10^17 such payments add up in parallel and in series, and tendons and bones lever them into the lift you see.">10¹⁷ 个这样的“付款”按同一方向并行、串联地累加，再经肌腱与骨骼的杠杆放大，就成为你看到的举重。</text>
+  <text x="600" y="596" text-anchor="middle" font-size="13" fill="#5b6b7c" data-zh="能量守恒在这里完全成立：吃进去的化学能 = 对外做的功 + 变成的热（约 78% 变热，所以你会出汗）。" data-en="Energy is exactly conserved: chemical energy eaten = work done + heat released (about 78% becomes heat, hence the sweat).">能量守恒在这里完全成立：吃进去的化学能 = 对外做的功 + 变成的热（约 78% 变热，所以你会出汗）。</text>
+</svg>
+  <figcaption><b>Figure 1-b</b>　The whole chain in one picture: from a single ATP molecule to lifting 100 kg, a causal chain amplified about 10²⁰ times. <span class="small">(Text inside the figure follows the page language.)</span></figcaption>
+</figure>
+
+<h3>1.1 Three energy terms you must keep apart</h3>
+<table>
+  <caption>Table 1　Three levels of energy currency (the easiest thing to confuse in this whole topic)</caption>
+  <tr><th>Level</th><th>Examples</th><th>Role in the body</th><th>Sense of scale</th></tr>
+  <tr>
+    <td>Savings<br>(long-term store)</td><td>Fat, glycogen</td>
+    <td>Energy stored for days to months; cannot drive a motor directly</td>
+    <td>A 70 kg adult carries well over 100,000 kcal in fat plus glycogen</td>
+  </tr>
+  <tr>
+    <td>Cash<br>(immediate currency)</td><td>ATP</td>
+    <td>The only universal means of payment; every energy-consuming reaction uses it</td>
+    <td>Total body ATP is only about 50–60 g; hard exercise uses it up in 2–3 seconds</td>
+  </tr>
+  <tr>
+    <td>The ATM<br>(conversion machinery)</td><td>Mitochondria, glycolytic enzymes</td>
+    <td>Converts savings into cash; oxygen is the oxidiser of this system</td>
+    <td>Every cell contains hundreds to thousands of mitochondria</td>
+  </tr>
+</table>
+
+<div class="note">
+  <b>Why all this trouble?</b> Because a cell cannot burn a spoonful of oil the way an engine does. Releasing that much energy at once
+  would destroy proteins and membranes in an instant. Split into small ATP packets, the energy can be delivered exactly where it is needed
+  and its rate can be tuned precisely — pull harder, hydrolyse a few more.
+</div>
+
+<h2 id="s2"><span class="num">02</span>How a cell turns food into ATP</h2>
+
+<h3>2.1 Stop one: digestion and absorption</h3>
+<p>Carbohydrates are broken into glucose, fats into fatty acids and glycerol, proteins into amino acids. They enter the blood and are
+delivered to roughly <b>37 trillion cells</b>.</p>
+
+<h3>2.2 Stop two: cellular respiration — three steps from savings to cash</h3>
+<ol>
+  <li><b>Glycolysis (in the cytoplasm, no oxygen needed):</b> one glucose → two pyruvate, <b>net gain 2 ATP</b>. Very fast; the vanguard for sprinting and lifting.</li>
+  <li><b>The citric acid cycle (in the mitochondrial matrix):</b> pyruvate is dismantled completely and high-energy electrons are handed to the carriers NADH and FADH₂.</li>
+  <li><b>Oxidative phosphorylation (inner mitochondrial membrane):</b> electrons travel down the respiratory chain, pumping protons to one side to build a “proton dam”; as protons flow back they spin ATP synthase, a rotary motor. <b>One glucose yields about 30–32 ATP in total.</b></li>
+</ol>
+
+<figure class="fig">
+  <img src="assets/en/fig02_atp_en.png" alt="The structure of ATP, its hydrolysis and its resynthesis">
+  <figcaption><b>Figure 2</b>　ATP discharging and recharging. ATP is adenosine plus three phosphates; hydrolysing the terminal (γ) phosphate gives ADP + Pi and releases about 50 kJ/mol of free energy. Note that <b>ATP is not a fuel but a courier</b> — its only job is to hand energy to wherever it is needed.</figcaption>
+</figure>
+
+<div class="calc">
+  <b>Work it out: how much energy is one ATP?</b><br>
+  Under physiological conditions, hydrolysing 1 mol of ATP releases about 50 kJ = 5×10⁴ J, and 1 mol contains 6.02×10²³ molecules:<br>
+  5×10⁴ ÷ 6.02×10²³ ≈ <b>8×10⁻²⁰ J per ATP</b>.<br>
+  What can that do? Lift a 10⁻¹⁵ kg bacterium by 8 micrometres, or move a 4 pN force through 10 nm — exactly one power stroke.
+</div>
+
+<h3>2.3 The daily cash flow: why so little ATP is enough</h3>
+<table>
+  <caption>Table 2　ATP stock and flow (estimates for a 70 kg adult; orders of magnitude)</caption>
+  <tr><th>Item</th><th>Amount</th><th>Conversion</th></tr>
+  <tr><td>Total body ATP</td><td>about 50–60 g</td><td>about 8×10²² molecules; enough for only 2–3 s of hard exercise</td></tr>
+  <tr><td>Daily ATP turnover</td><td>about 50–75 kg</td><td>roughly your own body weight; about 10²⁶ molecules per day</td></tr>
+  <tr><td>Turnover ratio</td><td>about 1000×</td><td>each ATP molecule is charged and discharged over 1000 times a day</td></tr>
+  <tr><td>Peak demand in hard exercise</td><td>about 10²² molecules/s</td><td>some 100 times the resting rate — this is the bottleneck</td></tr>
+</table>
+
+<p>Because the “savings → cash” conversion has limited speed, the body keeps three supply systems of different power:</p>
+
+<figure class="fig">
+  <img src="assets/en/fig10_power_time_en.png" alt="Power limits of the three energy systems and where daily ATP goes">
+  <figcaption><b>Figure 10</b>　Left: the power-versus-duration curves of the three energy systems (schematic). The phosphagen system (ATP + phosphocreatine) has the highest power but lasts seconds; glycolysis takes over for tens of seconds to two minutes; oxidative metabolism is the least powerful but almost unlimited. Right: most of a day’s ATP is spent simply staying alive (ion pumps, protein synthesis, body temperature). Exercise only accelerates an engine that never switches off.</figcaption>
+</figure>
+
+<div class="key">
+  <b>Direct link to lifting:</b> a single maximal lift runs mostly on the 3–5 second budget of the phosphagen system. That is partly why
+  “one breath, one rep” feels true — and why you need 1–3 minutes between heavy sets for phosphocreatine to refill.
+</div>
+
+<h2 id="s3"><span class="num">03</span>Six nested layers: from muscle to filaments</h2>
+
+<p>To understand how a tiny action becomes a large force, first see how muscle is packed.</p>
+
+<figure class="fig">
+  <img src="assets/en/fig03_muscle_hierarchy_en.png" alt="Six levels of muscle structure: muscle, fascicle, fibre, myofibril, sarcomere, filaments">
+  <figcaption><b>Figure 3</b>　The six nested layers. Each level down is smaller in size and larger in number: 1 muscle → 10⁵ fibres → 10⁸ myofibrils → 10¹³ sarcomeres → 10¹⁷ myosin heads. <b>The secret of amplification lives in these orders of magnitude.</b></figcaption>
+</figure>
+
+<h3>3.1 The sarcomere: the real engine unit</h3>
+<p>The sarcomere is the segment between two Z-discs, about 2.2 µm long at rest. It contains two kinds of filament:</p>
+<ul>
+  <li><b>Thick filament</b> (about 15 nm across): made of myosin; the heads sticking out along it are the molecular motors.</li>
+  <li><b>Thin filament</b> (about 7 nm across): a double helix of actin, the track the motors walk on; tropomyosin and troponin wind around it as a <b>safety switch</b>.</li>
+</ul>
+
+<figure class="fig">
+  <img src="assets/en/fig04_sarcomere_en.png" alt="The sarcomere: relaxed and contracted states compared">
+  <figcaption><b>Figure 4</b>　The sarcomere and its two states. Relaxed (top), the thin and thick filaments overlap little and the I-band and H-zone are wide; contracted (bottom), the thin filaments slide deeper towards the centre, <b>the two Z-discs are pulled closer, but the A-band (thick filament) never changes length</b>. This is the key evidence for the 1954 sliding-filament theory: muscle shortens not because filaments are compressed but because they slide into each other.</figcaption>
+</figure>
+
+<figure class="fig">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 730" width="100%" height="auto" preserveAspectRatio="xMidYMid meet" font-family="Microsoft YaHei, SimSun, sans-serif">
+  <defs>
+    <marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6b7c"/>
+    </marker>
+    <marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d94f45"/>
+    </marker>
+  </defs>
+  <rect width="1160" height="730" fill="#ffffff"/>
+
+  <text x="580" y="40" text-anchor="middle" font-size="25" font-weight="bold" fill="#1c2b3a" data-zh="肌节的解剖与两种状态：为什么“滑行”能让肌肉变短却不改变粗肌丝长度" data-en="Anatomy of the sarcomere: why sliding shortens the muscle but not the thick filament">肌节的解剖与两种状态：为什么“滑行”能让肌肉变短却不改变粗肌丝长度</text>
+  <text x="580" y="68" text-anchor="middle" font-size="14" fill="#5b6b7c" data-zh="一个肌节 = 两条 Z 线之间的一段；粗细肌丝本身长度不变，变的只是它们重叠的多少。" data-en="One sarcomere = the segment between two Z-discs; the filaments keep their length, only the overlap changes.">一个肌节 = 两条 Z 线之间的一段；粗细肌丝本身长度不变，变的只是它们重叠的多少。</text>
+
+  <!-- ================= 舒张状态 ================= -->
+  <text x="40" y="120" font-size="17" font-weight="bold" fill="#5b6b7c" data-zh="舒张（肌节长 2.2 µm，钙离子被泵回肌浆网）" data-en="Relaxed (sarcomere 2.2 um, calcium pumped back into the SR)">舒张（肌节长 2.2 µm，钙离子被泵回肌浆网）</text>
+  <g>
+    <!-- Z 线 -->
+    <line x1="90" y1="150" x2="90" y2="290" stroke="#37474f" stroke-width="6"/>
+    <line x1="1070" y1="150" x2="1070" y2="290" stroke="#37474f" stroke-width="6"/>
+    <text x="90" y="142" text-anchor="middle" font-size="13" fill="#37474f" font-weight="bold" data-zh="Z 线" data-en="Z-disc">Z 线</text>
+    <text x="1070" y="142" text-anchor="middle" font-size="13" fill="#37474f" font-weight="bold" data-zh="Z 线" data-en="Z-disc">Z 线</text>
+    <!-- 细丝（上下两条，从两侧 Z 线伸入） -->
+    <line x1="90" y1="180" x2="620" y2="180" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="1070" y1="262" x2="540" y2="262" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="90" y1="262" x2="620" y2="262" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="1070" y1="180" x2="540" y2="180" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <!-- 粗肌丝（居中） -->
+    <rect x="480" y="212" width="200" height="18" rx="9" fill="#7a5bd1"/>
+    <!-- 横桥 -->
+    <g stroke="#3aa66b" stroke-width="4" fill="#3aa66b">
+      <line x1="495" y1="212" x2="489" y2="192"/><line x1="527" y1="212" x2="521" y2="192"/>
+      <line x1="559" y1="212" x2="553" y2="192"/><line x1="591" y1="212" x2="585" y2="192"/>
+      <line x1="623" y1="212" x2="617" y2="192"/><line x1="655" y1="212" x2="649" y2="192"/>
+      <line x1="495" y1="230" x2="489" y2="250"/><line x1="527" y1="230" x2="521" y2="250"/>
+      <line x1="559" y1="230" x2="553" y2="250"/><line x1="591" y1="230" x2="585" y2="250"/>
+      <line x1="623" y1="230" x2="617" y2="250"/><line x1="655" y1="230" x2="649" y2="250"/>
+    </g>
+    <text x="580" y="322" text-anchor="middle" font-size="13" fill="#3aa66b" data-zh="肌球蛋白头（横桥）大多处于“未结合”状态" data-en="most myosin heads (cross-bridges) are not attached">肌球蛋白头（横桥）大多处于“未结合”状态</text>
+    <!-- 尺寸标注 -->
+    <line x1="90" y1="342" x2="1070" y2="342" stroke="#9aa7b4" stroke-width="2" marker-start="url(#m2)" marker-end="url(#m2)"/>
+    <text x="580" y="366" text-anchor="middle" font-size="13" fill="#5b6b7c" data-zh="整个肌节 = 2.2 µm" data-en="whole sarcomere = 2.2 um">整个肌节 = 2.2 µm</text>
+    <line x1="480" y1="392" x2="680" y2="392" stroke="#7a5bd1" stroke-width="2" marker-start="url(#m2)" marker-end="url(#m2)"/>
+    <text x="580" y="414" text-anchor="middle" font-size="13" fill="#7a5bd1" font-weight="bold" data-zh="A 带（粗肌丝长度）≈ 1.6 µm，永不改变" data-en="A-band (thick filament) ~ 1.6 um, never changes">A 带（粗肌丝长度）≈ 1.6 µm，永不改变</text>
+    <line x1="90" y1="440" x2="480" y2="440" stroke="#2f7fd1" stroke-width="2" marker-start="url(#m2)" marker-end="url(#m2)"/>
+    <text x="285" y="462" text-anchor="middle" font-size="13" fill="#2f7fd1" data-zh="I 带（只有细丝）宽" data-en="I-band (thin only) is wide">I 带（只有细丝）宽</text>
+    <line x1="680" y1="440" x2="1070" y2="440" stroke="#2f7fd1" stroke-width="2" marker-start="url(#m2)" marker-end="url(#m2)"/>
+    <text x="875" y="462" text-anchor="middle" font-size="13" fill="#2f7fd1" data-zh="I 带宽" data-en="I-band width">I 带宽</text>
+    <line x1="600" y1="212" x2="600" y2="290" stroke="#d94f45" stroke-width="2" stroke-dasharray="4 3"/>
+    <line x1="560" y1="212" x2="560" y2="290" stroke="#d94f45" stroke-width="2" stroke-dasharray="4 3"/>
+    <text x="580" y="500" text-anchor="middle" font-size="13" fill="#d94f45" data-zh="H 区（只有粗肌丝）也较宽" data-en="H-zone (thick only) is also wide">H 区（只有粗肌丝）也较宽</text>
+  </g>
+
+  <!-- 收缩箭头 -->
+  <line x1="580" y1="520" x2="580" y2="556" stroke="#d94f45" stroke-width="4" marker-end="url(#m3)"/>
+  <text x="600" y="545" font-size="14" fill="#d94f45" font-weight="bold" data-zh="神经信号 → 钙离子释放 → 横桥循环启动 → 细丝滑向中央" data-en="nerve signal -&gt; Ca2+ release -&gt; cross-bridge cycle -&gt; filaments slide inward">神经信号 → 钙离子释放 → 横桥循环启动 → 细丝滑向中央</text>
+
+  <!-- ================= 收缩状态 ================= -->
+  <text x="40" y="596" font-size="17" font-weight="bold" fill="#d94f45" data-zh="收缩（肌节短到 1.6 µm：细丝滑入更深，重叠区变长）" data-en="Contracted (sarcomere down to 1.6 um: filaments slide deeper, overlap grows)">收缩（肌节短到 1.6 µm：细丝滑入更深，重叠区变长）</text>
+  <g>
+    <line x1="230" y1="612" x2="230" y2="690" stroke="#37474f" stroke-width="6"/>
+    <line x1="930" y1="612" x2="930" y2="690" stroke="#37474f" stroke-width="6"/>
+    <line x1="230" y1="632" x2="640" y2="632" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="930" y1="632" x2="520" y2="632" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="230" y1="672" x2="640" y2="672" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="930" y1="672" x2="520" y2="672" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <rect x="490" y="644" width="180" height="16" rx="8" fill="#7a5bd1"/>
+    <g stroke="#3aa66b" stroke-width="4" fill="#3aa66b">
+      <line x1="505" y1="644" x2="499" y2="636"/><line x1="545" y1="644" x2="539" y2="636"/>
+      <line x1="585" y1="644" x2="579" y2="636"/><line x1="625" y1="644" x2="619" y2="636"/>
+      <line x1="665" y1="644" x2="659" y2="636"/>
+      <line x1="505" y1="660" x2="499" y2="668"/><line x1="545" y1="660" x2="539" y2="668"/>
+      <line x1="585" y1="660" x2="579" y2="668"/><line x1="625" y1="660" x2="619" y2="668"/>
+      <line x1="665" y1="660" x2="659" y2="668"/>
+    </g>
+    <text x="580" y="700" text-anchor="middle" font-size="13" fill="#d94f45" font-weight="bold" data-zh="两根 Z 线被拉近 0.6 µm；A 带仍是 1.6 µm，I 带与 H 区明显变窄——这就是“滑行”的铁证。" data-en="The two Z-discs are pulled 0.6 um closer; the A-band stays 1.6 um while the I-band and H-zone narrow - the proof of sliding.">两根 Z 线被拉近 0.6 µm；A 带仍是 1.6 µm，I 带与 H 区明显变窄——这就是“滑行”的铁证。</text>
+  </g>
+</svg>
+  <figcaption><b>Figure 4-b</b>　Anatomy of the sarcomere in both states (vector diagram). At rest the filaments overlap little and the I-band and H-zone are wide; when contracted the thin filaments slide deeper, the two Z-discs are pulled closer, and the A-band keeps its length throughout. <span class="small">(Text inside the figure follows the page language.)</span></figcaption>
+</figure>
+
+<div class="note">
+  <b>Calcium is the master switch, ATP is the master latch.</b>
+  <ul style="margin-bottom:0">
+    <li>A nerve signal arrives → the sarcoplasmic reticulum releases Ca²⁺ → troponin changes shape → tropomyosin moves aside → the binding sites on actin are exposed → the motors can grab (<b>contraction begins only now</b>).</li>
+    <li>The signal stops → the calcium pump (SERCA) returns Ca²⁺ to the sarcoplasmic reticulum (<b>this costs ATP too</b>) → the switch resets → the muscle relaxes.</li>
+    <li>If ATP runs out completely, the motors cannot let go and the muscle stays locked. In life this shows up as the stiffness of exhausted muscle.</li>
+  </ul>
+</div>
+
+<h2 id="s4"><span class="num">04</span>Molecular motors: the cell’s porters and rowers</h2>
+
+<p>Molecular motors are protein machines that <b>convert the chemical energy of ATP hydrolysis directly into directed mechanical motion</b> —
+no gears, no crankshaft, no piston. Three families are the most famous:</p>
+
+<figure class="fig">
+  <img src="assets/en/fig07_motor_families_en.png" alt="Three molecular motor families: myosin, kinesin, rotary motors">
+  <figcaption><b>Figure 7</b>　The three families and their key parameters. Myosin II walks on actin and drives muscle contraction; kinesin and dynein walk on microtubules and carry cargo inside cells; ATP synthase and the bacterial flagellar motor are <b>rotary</b>, driven by a proton flow. <b>All of them speak the same language: ATP.</b></figcaption>
+</figure>
+
+<h3>4.1 Three ways of walking</h3>
+<ul>
+  <li><b>Myosin II (rope-pulling):</b> two heads alternately grab the actin filament and rotate in a power stroke of about 10 nm. It works in crowds: thousands of heads pull at once to give a sustained force.</li>
+  <li><b>Kinesin (hand-over-hand walking):</b> two heads step alternately, 8 nm per step, walking along a microtubule like a person, towing a vesicle behind it — the “solo courier” that moves material from the cell centre to the periphery.</li>
+  <li><b>Rotary motors (water-wheel style):</b> ATP synthase lets protons flow through a channel in the membrane and spins a rotor, attaching one phosphate roughly every 120°, three steps per ATP; the bacterial flagellar motor uses the same trick to become a propeller.</li>
+</ul>
+
+<div class="calc">
+  <b>A sense of scale: how microscopic are these motors?</b>
+  <ul style="margin-bottom:0">
+    <li>Force: one myosin head, about <b>4 pN = 4×10⁻¹² N</b>. For comparison, a human hair weighs about 10⁻⁷ N — <b>25,000 times more</b>.</li>
+    <li>Step: about <b>10 nm = 10⁻⁸ m</b>, roughly a hundred-thousandth of a hair’s width, and about 3–4 actin monomers apart (each monomer spans about 2.7 nm).</li>
+    <li>Speed: with no load, 10–20 steps per second, that is 0.1–0.2 µm/s up to a few µm/s — slower than a sloth; but there are so many of them that the whole muscle is not slow at all.</li>
+  </ul>
+</div>
+
+<div class="trap">
+  <b>Counter-intuitive but crucial: the first job of ATP is to make the motor let go.</b>
+  Once a myosin head has grabbed actin in a strong bond, <b>it can detach only by binding a new ATP</b>.
+  So plenty of ATP means fast release, fast cycling, fast and supple contraction; no ATP means everything locks up.
+</div>
+
+<h2 id="s5"><span class="num">05</span>The cross-bridge cycle: a full accounting of one stroke</h2>
+
+<p>Zoom in on a single myosin head. Its working day is a five-step cycle:</p>
+
+<figure class="fig">
+  <img src="assets/en/fig05_crossbridge_en.png" alt="The five steps of the cross-bridge cycle: ATP binding, cocking, attachment, power stroke, rigor">
+  <figcaption><b>Figure 5</b>　The five steps of the cross-bridge cycle. <b>① ATP binds</b> (head detaches from the filament) → <b>② hydrolysis cocks it</b> (ATP → ADP + Pi; the head rotates to a loaded position) → <b>③ weak attachment</b> to the next actin unit → <b>④ the power stroke</b> (Pi then ADP are released and the head rotates about 70°, pulling the filament about 10 nm with about 4 pN) → <b>⑤ the strong, waiting state</b> until the next ATP arrives to release it. One ATP per cycle.</figcaption>
+</figure>
+
+<h3>5.1 Energy ledger for a single cycle</h3>
+<table>
+  <caption>Table 3　Energy in and out for one cross-bridge cycle (order of magnitude)</caption>
+  <tr><th>Item</th><th>Value</th><th>Note</th></tr>
+  <tr><td>Input: free energy of ATP hydrolysis</td><td>≈ 8×10⁻²⁰ J</td><td>ΔG ≈ −50 kJ/mol under physiological conditions</td></tr>
+  <tr><td>Output: mechanical work</td><td>F × d = 4 pN × 10 nm ≈ 4×10⁻²⁰ J</td><td>assuming full force throughout the stroke</td></tr>
+  <tr><td>Output: heat</td><td>≈ 4×10⁻²⁰ J</td><td>single-molecule efficiency about 50% (load dependent)</td></tr>
+  <tr><td>Whole-muscle efficiency</td><td>about 22% (work efficiency)</td><td>because the calcium pump, the sodium–potassium pump and viscoelastic tissue all cost energy too</td></tr>
+</table>
+
+<div class="note">
+  <b>Do not mix up two different “efficiencies”:</b><br>
+  ① <b>Conversion efficiency of a single motor</b> (chemical → mechanical) can reach 30–50% at a suitable load;<br>
+  ② <b>Work efficiency of a whole muscle</b> (external work ÷ total metabolic energy) is usually only 20–25%, because calcium pumping, sodium–potassium pumping and basal metabolism are included.<br>
+  This also explains why the same workout exhausts different people differently: pacing changes the amount of internal wasted work and isometric effort.
+</div>
+
+<h3>5.2 The trade-off between force and speed: why lifting is slow</h3>
+
+<figure class="fig">
+  <img src="assets/en/fig06_force_velocity_en.png" alt="Muscle force-velocity relationship and where everyday actions fall">
+  <figcaption><b>Figure 6</b>　Muscle’s “gearbox”. A: the Hill force–velocity relation — the faster the shortening, the less force; their product (power) peaks at an intermediate speed, roughly one third of maximal force and one third of maximal velocity. B: everyday actions sit at different points: lifting is at the high-force, low-speed end, sprinting at the low-force, high-speed end, and maximum power output (all-out cycling) in between.</figcaption>
+</figure>
+
+<div class="key">
+  <b>This one curve explains three everyday facts:</b>
+  <ul style="margin-bottom:0">
+    <li>Lifting must be slow: to get maximal force you must approach isometric contraction (speed ≈ 0).</li>
+    <li>Planks and holding a weight are exhausting: external work is zero, but the motors still cycle, the calcium pump still pumps and the sodium–potassium pump still restores the membrane potential — ATP keeps burning.</li>
+    <li>“Maximum power” actions (all-out cycling, kettlebell swings) do not use a maximal load but a moderate one moved fast — which lands mid-curve.</li>
+  </ul>
+</div>
+
+<h2 id="s6"><span class="num">06</span>From tiny motion to big force: two multiplications</h2>
+
+<p>This is the heart of the whole story: <b>how does a nanometre-scale molecular action become hundreds of newtons of macroscopic force?</b> The answer is two multiplications.</p>
+
+<figure class="fig">
+  <img src="assets/en/fig08_scale_ladder_en.png" alt="From 1 nanometre to 1 metre: the ladder of force and displacement amplification">
+  <figcaption><b>Figure 8</b>　The ladder of scale. Each level is the level above multiplied by a huge number. One motor gives 4 pN, but a whole biceps reaches 200–400 N; one step is 10 nm, but sarcomeres in series shorten the muscle by millimetres, which levers then turn into tens of centimetres.</figcaption>
+</figure>
+
+<h3>6.1 Multiplication one: adding force in parallel</h3>
+<p>At any instant, thousands of motors pull in the same direction, and their forces <b>add in parallel</b>:</p>
+<ul>
+  <li>One myosin head: about 4 pN.</li>
+  <li>One thick filament: about 300 heads, some fraction bound at any moment → about <b>0.1–1 nN</b> in total.</li>
+  <li>One muscle fibre (about 10⁵ myofibrils and millions of thick filaments in parallel) → the order of <b>1 mN</b>.</li>
+  <li>One biceps (about 10⁵ fibres in parallel) → <b>200–400 N</b>.</li>
+</ul>
+<p>From 4 pN to 300 N is an amplification of about <b>10¹⁴</b>.</p>
+
+<div class="note">
+  <b>Why can’t we just add 10¹⁷ × 4 pN?</b> Because real muscle applies three discounts:
+  ① not every head is bound at the same instant (only a small fraction pull at once; the duty ratio of fast muscle is of order 5%);
+  ② the angle between a head and the filament loses part of the force;
+  ③ calcium regulation, fatigue and metabolic supply all limit output.
+  The resulting maximum tension is about <b>300 kN/m² (about 3 kg/cm²)</b>, which is consistent with
+  “4 pN per head, about 10⁹ heads per mm², duty ratio about 5%” — microscopic parameters and macroscopic measurement agree.
+</div>
+
+<h3>6.2 Multiplication two: adding displacement in series</h3>
+<p>The total shortening of a muscle is the <b>sum of the shortening of all sarcomeres in series</b>:</p>
+<ul>
+  <li>One sarcomere: from 2.2 µm to 1.6 µm, about <b>0.6 µm</b> (each head contributes a 10 nm step, accumulated over many cycles).</li>
+  <li>One 10 cm fibre: about 10⁵ sarcomeres in series → total shortening of <b>several centimetres</b>.</li>
+  <li>Add tendon elasticity and skeletal levers (joint moment arms) and the hand travels tens of centimetres while the barbell rises a metre.</li>
+</ul>
+
+<div class="calc">
+  <b>The order size of the two multiplications:</b> lifting 20 kg by 1 m requires about 10²² ATP molecules to be hydrolysed (see the calculation in section 7).
+  As “motor orders” that is roughly 10²² power strokes — while the energy you spend is about half a kilocalorie, one peanut.
+</div>
+
+<h2 id="s7"><span class="num">07</span>Lifting a barbell: the energy ledger of one lift</h2>
+
+<figure class="fig">
+  <img src="assets/en/fig12_full_chain_en.png" alt="The complete causal chain of a lift, in three columns">
+  <figcaption><b>Figure 12</b>　The same chain in three columns: left is “motive and command” (brain → nerve → calcium → switch protein), middle is “energy and molecules” (ATP and the three supply systems → the power stroke → forces adding up), right is “macroscopic result” (sarcomere shortening → muscle contraction → skeletal lever → the barbell rises).</figcaption>
+</figure>
+
+<h3>7.1 The energy ledger of one lift (20 kg, raised 1 m)</h3>
+
+<figure class="fig">
+  <img src="assets/en/fig11_lift_energy_ledger_en.png" alt="The energy ledger of one lift: from the barbell to ATP molecules in six steps">
+  <figcaption><b>Figure 11</b>　Six steps to work out what one lift “costs”. Bottom line: 196 J of useful external work, about 230 J of extra internal work,
+  so at 22% efficiency the total metabolic cost is about <b>1,950 J ≈ 0.47 kcal</b>, requiring about <b>2.4×10²² ATP</b> (about 20 micrograms, made as it is used).</figcaption>
+</figure>
+
+<table>
+  <caption>Table 4　The full ledger of one lift, so you can check every step</caption>
+  <tr><th>Step</th><th>Formula / value</th><th>Meaning</th></tr>
+  <tr><td>① Useful external work</td><td>W = mgh = 20 × 9.81 × 1 ≈ <b>196 J</b></td><td>the only work the outside world can see</td></tr>
+  <tr><td>② Additional internal work</td><td>≈ <b>230 J</b> (order of magnitude)</td><td>against the muscle’s own elastic and viscous resistance; varies with the movement and the individual</td></tr>
+  <tr><td>③ Total mechanical work</td><td>196 + 230 ≈ <b>430 J</b></td><td>what the muscle actually “moves”</td></tr>
+  <tr><td>④ Metabolic cost</td><td>430 ÷ 0.22 ≈ <b>1,950 J</b></td><td>back-calculated from about 22% work efficiency; about 1,500 J becomes heat</td></tr>
+  <tr><td>⑤ In food energy</td><td>1950 ÷ 4184 ≈ <b>0.47 kcal</b></td><td>about one peanut</td></tr>
+  <tr><td>⑥ In ATP molecules</td><td>1950 ÷ 8×10⁻²⁰ ≈ <b>2.4×10²²</b></td><td>about 20 micrograms of ATP, hydrolysed and rebuilt continuously</td></tr>
+  <tr><td>⑦ Holding still for 2 s</td><td>external work <b>0</b>, but metabolism continues at 100–300 J/s</td><td>motors cycle, calcium is pumped back, sodium–potassium pumps restore the potential — holding is harder than lifting</td></tr>
+</table>
+
+<div class="trap">
+  <b>A common puzzle: ATP weighs only about 50 g in total, so how can one lift hydrolyse 2.4×10²² molecules (about 20 µg)?</b><br>
+  No contradiction. Those 20 µg are the total hydrolysed <b>during that movement</b> — a <b>flow</b>, not a <b>stock</b>. Phosphocreatine and mitochondria
+  rebuild ADP into ATP within seconds, just as a café sells hundreds of coffees a day while only ten cups sit on the counter.
+</div>
+
+<h3>7.2 The order of events: how the body supplies energy with “zero delay”</h3>
+<ol>
+  <li><b>0–3 s:</b> the ATP already present is hydrolysed directly (a tiny stock, used up almost instantly).</li>
+  <li><b>3–10 s:</b> phosphocreatine turns ADP back into ATP rapidly (the emergency power bank), giving the highest power.</li>
+  <li><b>10 s–2 min:</b> glycolysis takes over (anaerobic, producing lactate; lower power but still high intensity).</li>
+  <li><b>After 2 min:</b> oxidative metabolism dominates (mitochondria burning sugar and fat), lowest power but nearly unlimited, and it repays the oxygen debt.</li>
+</ol>
+
+<h2 id="s8"><span class="num">08</span>Mapping onto macroscopic physics: work, power, efficiency, heat</h2>
+
+<p>This section lines the cellular numbers up with the quantities in a physics textbook.</p>
+
+<h3>8.1 Correspondence table</h3>
+<table>
+  <caption>Table 5　Microscopic ↔ macroscopic correspondence</caption>
+  <tr><th>Macroscopic concept</th><th>Formula / unit</th><th>What it corresponds to in the cell</th></tr>
+  <tr><td>Work</td><td>W = F·d, joules (J)</td><td>force of one myosin head × displacement; the sum over countless motors</td></tr>
+  <tr><td>Force</td><td>F, newtons (1 N = 10¹² pN)</td><td>about 4 pN per motor, added in parallel to reach newtons</td></tr>
+  <tr><td>Displacement</td><td>d, metres (1 m = 10⁹ nm)</td><td>10 nm per step, added in series through sarcomeres to reach metres</td></tr>
+  <tr><td>Power</td><td>P = W/t, watts (W)</td><td>rate of ATP hydrolysis × work per ATP; peaks at 1–3 kW</td></tr>
+  <tr><td>Energy</td><td>E, joules; food often in kcal (1 kcal = 4184 J)</td><td>free energy of ATP hydrolysis ≈ 8×10⁻²⁰ J each</td></tr>
+  <tr><td>Efficiency</td><td>η = useful output ÷ total input</td><td>about 30–50% for one motor, about 22% for whole muscle</td></tr>
+  <tr><td>Heat</td><td>Q, joules</td><td>unused free energy; about 78% of muscle metabolism becomes heat</td></tr>
+  <tr><td>Entropy / second law</td><td>ΔS<sub>total</sub> ≥ 0</td><td>why efficiency can never be 100%: some free energy must always be dissipated as heat</td></tr>
+</table>
+
+<h3>8.2 Efficiency compared: the body is not efficient, but it lasts</h3>
+
+<figure class="fig">
+  <img src="assets/en/fig09_efficiency_en.png" alt="Efficiency of various energy conversions and the energy ledger of one lift">
+  <figcaption><b>Figure 9-b</b>　Left: conversion efficiency of various systems. Human skeletal muscle is about 22%, below a diesel engine (about 40%) and far below an electric motor (about 90%) — yet it works at body temperature, on sugar and fat, for decades, and repairs itself. That is the real advantage of a biological system. Right: where the energy of one lift goes; only about 10% becomes useful external work, and most of the rest becomes heat.</figcaption>
+</figure>
+
+<div class="key">
+  <b>Why you must sweat:</b> about 78% of metabolic energy becomes heat. At rest the body produces 80–120 W (like an incandescent bulb);
+  during hard exercise it can exceed 1000 W. If heat loss cannot keep up, body temperature rises — sweating and dilated skin vessels are the
+  cooling system fitted to this low-efficiency engine.
+</div>
+
+<h3>8.3 How the books balance</h3>
+<p>Take one 20 kg lift through 1 m, and reconcile input with output:</p>
+<table>
+  <caption>Table 6　Energy conservation, with 1,950 J of metabolic cost as 100%</caption>
+  <tr><th>Item</th><th>Energy</th><th>Share</th><th>Where it goes</th></tr>
+  <tr><td>Useful external work (lifting the barbell)</td><td>196 J</td><td>≈ 10%</td><td>gravitational potential energy; can be converted again when you let go</td></tr>
+  <tr><td>Internal “idling” work</td><td>≈ 230 J</td><td>≈ 12%</td><td>ends up as heat too</td></tr>
+  <tr><td>Metabolic and internal heat</td><td>≈ 1,520 J</td><td>≈ 78%</td><td>body temperature, sweat evaporation, blood flow</td></tr>
+  <tr><td><b>Total</b></td><td><b>≈ 1,950 J</b></td><td><b>100%</b></td><td>exactly conserved</td></tr>
+</table>
+
+<div class="note">
+  <b>Three equations worth remembering:</b><br>
+  ① Conservation: chemical energy in = work done outside + heat released + energy temporarily stored.<br>
+  ② Power = force × velocity: this is why maximum power occurs at intermediate speed and force (Figure 6).<br>
+  ③ 1 kcal (a food calorie) = 4184 J: this converts the cell-scale “×10⁻²⁰ J” into calories on your plate.
+</div>
+
+<h2 id="s9"><span class="num">09</span>Common misconceptions and a self-test</h2>
+
+<h3>9.1 Six common misconceptions</h3>
+
+<details>
+  <summary>1. “Muscle contraction compresses the fibres like a spring.”</summary>
+  <p>No. The thick and thin filaments hardly change length; what changes is <b>how much they overlap</b>. The evidence: during contraction the A-band (thick filament region) keeps its length while the I-band and H-zone narrow (Figure 4).</p>
+</details>
+
+<details>
+  <summary>2. “ATP is a fuel that burns up and is gone.”</summary>
+  <p>ATP is much more like a rechargeable battery or cash: hydrolysed to ADP + Pi, it is quickly recharged by phosphocreatine, glycolysis and oxidative metabolism. The ATP you turn over each day weighs about as much as you do.</p>
+</details>
+
+<details>
+  <summary>3. “Holding a weight does no work, so it costs no energy.”</summary>
+  <p>Physically no external work is done, but physiologically ATP is still burned: motors keep cycling, the calcium pump keeps returning calcium and the sodium–potassium pump maintains the membrane potential. That is why planks and isometric training are so tiring.</p>
+</details>
+
+<details>
+  <summary>4. “Muscle shortens because motors push the filament, or glue themselves to it.”</summary>
+  <p>It is a grab–pull–release cycle: ATP binding detaches the head, hydrolysis cocks it, and it then grabs the filament and rotates about 70°. Permanent “glue” (a persistent bond) is a pathological state, not normal contraction.</p>
+</details>
+
+<details>
+  <summary>5. “A single motor is very strong, so muscle is strong.”</summary>
+  <p>The opposite: one motor gives only 4 pN (a hair weighs 25,000 times more). Muscle force comes entirely from <b>numbers</b>: force adds in parallel, displacement adds in series.</p>
+</details>
+
+<details>
+  <summary>6. “Low efficiency means the body is wasteful.”</summary>
+  <p>Low efficiency is a requirement of thermodynamics (the second law). The real advantages of a biological system are self-repair, operation at ambient temperature and pressure, fuel from sugar and fat, and decades of continuous service. Engineered systems are more efficient but need oil, cooling and maintenance.</p>
+</details>
+
+<h3>9.2 Self-test (think first, then open the answer)</h3>
+
+<details>
+  <summary>Q1　One ATP hydrolysis releases about 8×10⁻²⁰ J; one myosin power stroke produces 4 pN over 10 nm. What is the mechanical efficiency of that stroke?</summary>
+  <p>Work = 4×10⁻¹² N × 10×10⁻⁹ m = 4×10⁻²⁰ J. Efficiency = 4×10⁻²⁰ ÷ 8×10⁻²⁰ = <b>50%</b> (ideal, fully loaded; it varies with load). For a whole muscle the figure falls to 20–25% because of calcium pumping and other costs.</p>
+</details>
+
+<details>
+  <summary>Q2　Total body ATP is only about 50 g. Why can hard exercise last seconds to tens of seconds?</summary>
+  <p>Because ATP is a <b>flow</b>, not a stock. Phosphocreatine re-phosphorylates ADP within seconds and glycolysis then takes over. Daily ATP turnover is 50–75 kg, meaning each molecule is recharged over a thousand times.</p>
+</details>
+
+<details>
+  <summary>Q3　Lifting a 10 kg box by 0.5 m: how much external work, and at 22% efficiency how much metabolic energy, in kcal?</summary>
+  <p>W = 10 × 9.81 × 0.5 ≈ <b>49 J</b>; metabolic cost ≈ 49 ÷ 0.22 ≈ <b>223 J</b>; in kcal, 223 ÷ 4184 ≈ <b>0.053 kcal</b> (more in reality, because internal work is added).</p>
+</details>
+
+<details>
+  <summary>Q4　Why do you shake and fatigue faster when you “hold” a heavy weight than when you lift it quickly?</summary>
+  <p>An isometric contraction does no external work, yet the motors still cycle and the calcium and sodium–potassium pumps still consume ATP, while raised intramuscular pressure reduces blood flow and oxygen supply. Income does not rise, spending continues — so fatigue comes sooner.</p>
+</details>
+
+<details>
+  <summary>Q5　If every myosin head bound and pulled at the same instant, how much force would that be? Why is it impossible?</summary>
+  <p>The crude figure is 10¹⁷ × 4 pN ≈ 4×10⁵ N (tens of tonnes). It cannot happen because the duty ratio is low (most heads are cocking or waiting), the angle costs part of the force, and calcium regulation and metabolic supply limit output. Real maximum tension is about 300 kN/m², and a whole biceps develops 200–400 N.</p>
+</details>
+
+<h2 id="s10"><span class="num">10</span>Appendix: quick-reference data and sources</h2>
+
+<h3>10.1 Quick-reference numbers</h3>
+<table>
+  <caption>Table 7　Frequently used values (orders of magnitude, for intuition; sources and individuals vary)</caption>
+  <tr><th>Item</th><th>Value</th></tr>
+  <tr><td>Free energy of ATP hydrolysis (physiological)</td><td>about −50 kJ/mol ≈ 8×10⁻²⁰ J per molecule</td></tr>
+  <tr><td>Body ATP stock / daily turnover</td><td>about 50–60 g / about 50–75 kg</td></tr>
+  <tr><td>Number of cells in the body</td><td>about 3.7×10¹³ (37 trillion)</td></tr>
+  <tr><td>Sarcomere length at rest / shortest</td><td>about 2.2 µm / about 1.6 µm</td></tr>
+  <tr><td>Thick filament / thin filament / microtubule diameter</td><td>about 15 nm / 7 nm / 25 nm</td></tr>
+  <tr><td>Myosin step / stall force</td><td>about 10 nm / about 4 pN</td></tr>
+  <tr><td>Kinesin step / stall force / speed</td><td>8 nm / about 6–7 pN / about 0.8 µm/s</td></tr>
+  <tr><td>Maximum muscle tension</td><td>about 300 kN/m² (about 3 kg/cm²)</td></tr>
+  <tr><td>Typical biceps pull</td><td>about 200–400 N</td></tr>
+  <tr><td>Muscle work efficiency</td><td>about 20–25%</td></tr>
+  <tr><td>Resting metabolic power</td><td>about 80–120 W (≈ 2000 kcal/day)</td></tr>
+  <tr><td>Peak power output</td><td>about 1–3 kW (for a few seconds only)</td></tr>
+  <tr><td>1 kcal</td><td>= 4184 J</td></tr>
+</table>
+
+<h3>10.2 One-paragraph review</h3>
+<div class="key">
+  <b>Food is savings, ATP is cash, mitochondria are the ATM; motors are hands, filaments are ropes, sarcomeres are knots.</b><br>
+  One power stroke is only 10 nanometres, 4 piconewtons and 8×10⁻²⁰ joules; but 10¹⁷ hands in parallel and 10⁵ sarcomeres in series,
+  amplified by tendons and bones, become a 20 kg lift and 196 J of external work — and about 78% of the energy ends up as the heat that makes you sweat.
+</div>
+
+<h3>10.3 Main sources and further reading</h3>
+<ul class="refs">
+  <li>Huxley, A. F. &amp; Niedergerke, R. (1954) <i>Structural changes in muscle during contraction</i>; Huxley, H. E. &amp; Hanson, J. (1954) — the original sliding-filament papers.</li>
+  <li>Hill, A. V. (1938) <i>The heat of shortening and the dynamic constants of muscle</i> — the classic source of the force–velocity relation.</li>
+  <li>Finer, J. T., Simmons, R. M. &amp; Spudich, J. A. (1994) <i>Single myosin molecule mechanics: piconewton forces and nanometre steps</i>, Nature — direct measurement of single-molecule force and step size.</li>
+  <li>Kinosita, K. and colleagues on the rotation and torque of F₁-ATP synthase (Nature / Cell, 1997–2000).</li>
+  <li>Single-molecule studies of kinesin stepping and stall force by Block, S. M., Svoboda, K., Vale, R. D. and others.</li>
+  <li>Quantitative work on myosin head density and duty ratio in skeletal muscle (used here to check that “4 pN → 300 kN/m²” is self-consistent).</li>
+  <li>Textbooks: <i>Guyton &amp; Hall Textbook of Medical Physiology</i>, <i>Lehninger Principles of Biochemistry</i>, <i>Alberts, Molecular Biology of the Cell</i>.</li>
+</ul>
+<p class="small">Note: values such as “×10⁻²⁰ J”, “4 pN”, “10 nm” and “22%” are order-of-magnitude estimates meant to build intuition and check self-consistency, not precision measurements.</p>
+
+<hr class="soft">
+<p class="small">This page is part of an offline, single-file web document. All figures live in the <code>assets/</code> folder next to it (PNG for data figures, SVG for structural diagrams). Open it in any browser, or use “Print → Save as PDF” for an e-book version.</p>
+
+</div>
+
+<script>
+(function () {
+  var KEY = 'erev-lang';
+  var DEF = 'en';
+  function current() {
+    try { var v = localStorage.getItem(KEY); return (v === 'en' || v === 'zh') ? v : DEF; }
+    catch (e) { return DEF; }
+  }
+  function apply() {
+    var en = current() === 'en';
+    var nodes = document.querySelectorAll('svg text[data-en]');
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i];
+      var zh = el.getAttribute('data-zh'), e = el.getAttribute('data-en');
+      var want = en ? (e || zh) : (zh || e);
+      if (want && el.textContent !== want) el.textContent = want;
+    }
+    var bar = document.querySelector('.langbar');
+    if (bar) {
+      var links = bar.querySelectorAll('a');
+      for (var k = 0; k < links.length; k++) {
+        var isEn = /article-en/.test(links[k].getAttribute('href') || '');
+        links[k].className = (isEn === en) ? 'on' : '';
+      }
+    }
+  }
+  window.erevSetLang = function (l) { try { localStorage.setItem(KEY, l); } catch (e) {} apply(); };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', apply);
+  else apply();
+})();
+</script>
+</body>
+</html>

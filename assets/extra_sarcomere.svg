@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 730" width="1160" height="730" font-family="Microsoft YaHei, SimSun, sans-serif">
+  <defs>
+    <marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6b7c"/>
+    </marker>
+    <marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d94f45"/>
+    </marker>
+  </defs>
+  <rect width="1160" height="730" fill="#ffffff"/>
+
+  <text x="580" y="40" text-anchor="middle" font-size="25" font-weight="bold" fill="#1c2b3a" data-zh="肌节的解剖与两种状态：为什么“滑行”能让肌肉变短却不改变粗肌丝长度" data-en="Anatomy of the sarcomere: why sliding shortens the muscle but not the thick filament">肌节的解剖与两种状态：为什么“滑行”能让肌肉变短却不改变粗肌丝长度</text>
+  <text x="580" y="68" text-anchor="middle" font-size="14" fill="#5b6b7c" data-zh="一个肌节 = 两条 Z 线之间的一段；粗细肌丝本身长度不变，变的只是它们重叠的多少。" data-en="One sarcomere = the segment between two Z-discs; the filaments keep their length, only the overlap changes.">一个肌节 = 两条 Z 线之间的一段；粗细肌丝本身长度不变，变的只是它们重叠的多少。</text>
+
+  <!-- ================= 舒张状态 ================= -->
+  <text x="40" y="120" font-size="17" font-weight="bold" fill="#5b6b7c" data-zh="舒张（肌节长 2.2 µm，钙离子被泵回肌浆网）" data-en="Relaxed (sarcomere 2.2 um, calcium pumped back into the SR)">舒张（肌节长 2.2 µm，钙离子被泵回肌浆网）</text>
+  <g>
+    <!-- Z 线 -->
+    <line x1="90" y1="150" x2="90" y2="290" stroke="#37474f" stroke-width="6"/>
+    <line x1="1070" y1="150" x2="1070" y2="290" stroke="#37474f" stroke-width="6"/>
+    <text x="90" y="142" text-anchor="middle" font-size="13" fill="#37474f" font-weight="bold" data-zh="Z 线" data-en="Z-disc">Z 线</text>
+    <text x="1070" y="142" text-anchor="middle" font-size="13" fill="#37474f" font-weight="bold" data-zh="Z 线" data-en="Z-disc">Z 线</text>
+    <!-- 细丝（上下两条，从两侧 Z 线伸入） -->
+    <line x1="90" y1="180" x2="620" y2="180" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="1070" y1="262" x2="540" y2="262" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="90" y1="262" x2="620" y2="262" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="1070" y1="180" x2="540" y2="180" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <!-- 粗肌丝（居中） -->
+    <rect x="480" y="212" width="200" height="18" rx="9" fill="#7a5bd1"/>
+    <!-- 横桥 -->
+    <g stroke="#3aa66b" stroke-width="4" fill="#3aa66b">
+      <line x1="495" y1="212" x2="489" y2="192"/><line x1="527" y1="212" x2="521" y2="192"/>
+      <line x1="559" y1="212" x2="553" y2="192"/><line x1="591" y1="212" x2="585" y2="192"/>
+      <line x1="623" y1="212" x2="617" y2="192"/><line x1="655" y1="212" x2="649" y2="192"/>
+      <line x1="495" y1="230" x2="489" y2="250"/><line x1="527" y1="230" x2="521" y2="250"/>
+      <line x1="559" y1="230" x2="553" y2="250"/><line x1="591" y1="230" x2="585" y2="250"/>
+      <line x1="623" y1="230" x2="617" y2="250"/><line x1="655" y1="230" x2="649" y2="250"/>
+    </g>
+    <text x="580" y="322" text-anchor="middle" font-size="13" fill="#3aa66b" data-zh="肌球蛋白头（横桥）大多处于“未结合”状态" data-en="most myosin heads (cross-bridges) are not attached">肌球蛋白头（横桥）大多处于“未结合”状态</text>
+    <!-- 尺寸标注 -->
+    <line x1="90" y1="342" x2="1070" y2="342" stroke="#9aa7b4" stroke-width="2" marker-start="url(#m2)" marker-end="url(#m2)"/>
+    <text x="580" y="366" text-anchor="middle" font-size="13" fill="#5b6b7c" data-zh="整个肌节 = 2.2 µm" data-en="whole sarcomere = 2.2 um">整个肌节 = 2.2 µm</text>
+    <line x1="480" y1="392" x2="680" y2="392" stroke="#7a5bd1" stroke-width="2" marker-start="url(#m2)" marker-end="url(#m2)"/>
+    <text x="580" y="414" text-anchor="middle" font-size="13" fill="#7a5bd1" font-weight="bold" data-zh="A 带（粗肌丝长度）≈ 1.6 µm，永不改变" data-en="A-band (thick filament) ~ 1.6 um, never changes">A 带（粗肌丝长度）≈ 1.6 µm，永不改变</text>
+    <line x1="90" y1="440" x2="480" y2="440" stroke="#2f7fd1" stroke-width="2" marker-start="url(#m2)" marker-end="url(#m2)"/>
+    <text x="285" y="462" text-anchor="middle" font-size="13" fill="#2f7fd1" data-zh="I 带（只有细丝）宽" data-en="I-band (thin only) is wide">I 带（只有细丝）宽</text>
+    <line x1="680" y1="440" x2="1070" y2="440" stroke="#2f7fd1" stroke-width="2" marker-start="url(#m2)" marker-end="url(#m2)"/>
+    <text x="875" y="462" text-anchor="middle" font-size="13" fill="#2f7fd1" data-zh="I 带宽" data-en="I-band width">I 带宽</text>
+    <line x1="600" y1="212" x2="600" y2="290" stroke="#d94f45" stroke-width="2" stroke-dasharray="4 3"/>
+    <line x1="560" y1="212" x2="560" y2="290" stroke="#d94f45" stroke-width="2" stroke-dasharray="4 3"/>
+    <text x="580" y="500" text-anchor="middle" font-size="13" fill="#d94f45" data-zh="H 区（只有粗肌丝）也较宽" data-en="H-zone (thick only) is also wide">H 区（只有粗肌丝）也较宽</text>
+  </g>
+
+  <!-- 收缩箭头 -->
+  <line x1="580" y1="520" x2="580" y2="556" stroke="#d94f45" stroke-width="4" marker-end="url(#m3)"/>
+  <text x="600" y="545" font-size="14" fill="#d94f45" font-weight="bold" data-zh="神经信号 → 钙离子释放 → 横桥循环启动 → 细丝滑向中央" data-en="nerve signal -&gt; Ca2+ release -&gt; cross-bridge cycle -&gt; filaments slide inward">神经信号 → 钙离子释放 → 横桥循环启动 → 细丝滑向中央</text>
+
+  <!-- ================= 收缩状态 ================= -->
+  <text x="40" y="596" font-size="17" font-weight="bold" fill="#d94f45" data-zh="收缩（肌节短到 1.6 µm：细丝滑入更深，重叠区变长）" data-en="Contracted (sarcomere down to 1.6 um: filaments slide deeper, overlap grows)">收缩（肌节短到 1.6 µm：细丝滑入更深，重叠区变长）</text>
+  <g>
+    <line x1="230" y1="612" x2="230" y2="690" stroke="#37474f" stroke-width="6"/>
+    <line x1="930" y1="612" x2="930" y2="690" stroke="#37474f" stroke-width="6"/>
+    <line x1="230" y1="632" x2="640" y2="632" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="930" y1="632" x2="520" y2="632" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="230" y1="672" x2="640" y2="672" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="930" y1="672" x2="520" y2="672" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <rect x="490" y="644" width="180" height="16" rx="8" fill="#7a5bd1"/>
+    <g stroke="#3aa66b" stroke-width="4" fill="#3aa66b">
+      <line x1="505" y1="644" x2="499" y2="636"/><line x1="545" y1="644" x2="539" y2="636"/>
+      <line x1="585" y1="644" x2="579" y2="636"/><line x1="625" y1="644" x2="619" y2="636"/>
+      <line x1="665" y1="644" x2="659" y2="636"/>
+      <line x1="505" y1="660" x2="499" y2="668"/><line x1="545" y1="660" x2="539" y2="668"/>
+      <line x1="585" y1="660" x2="579" y2="668"/><line x1="625" y1="660" x2="619" y2="668"/>
+      <line x1="665" y1="660" x2="659" y2="668"/>
+    </g>
+    <text x="580" y="700" text-anchor="middle" font-size="13" fill="#d94f45" font-weight="bold" data-zh="两根 Z 线被拉近 0.6 µm；A 带仍是 1.6 µm，I 带与 H 区明显变窄——这就是“滑行”的铁证。" data-en="The two Z-discs are pulled 0.6 um closer; the A-band stays 1.6 um while the I-band and H-zone narrow - the proof of sliding.">两根 Z 线被拉近 0.6 µm；A 带仍是 1.6 µm，I 带与 H 区明显变窄——这就是“滑行”的铁证。</text>
+  </g>
+</svg>

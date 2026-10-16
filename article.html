@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>细胞如何“花钱”、分子马达如何把你举起来：一份零基础图解</title>
+<style>
+  :root{
+    --ink:#1c2b3a; --muted:#5b6b7c; --line:#e2e8ef; --bg:#f6f8fb; --card:#ffffff;
+    --atp:#d94f45; --move:#2f7fd1; --store:#3aa66b; --gold:#d9a520; --purple:#7a5bd1;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB",SimSun,sans-serif;
+    font-size:17px; line-height:1.85;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:0 22px 90px}
+  header.hero{
+    background:linear-gradient(135deg,#1c2b3a 0%,#2f4f6f 55%,#2f7fd1 100%);
+    color:#fff;padding:52px 0 46px;margin-bottom:26px;
+  }
+  header.hero .wrap{padding-bottom:0}
+  .kicker{font-size:14px;letter-spacing:.24em;opacity:.8;margin:0 0 10px}
+  h1{font-size:33px;line-height:1.35;margin:0 0 14px;font-weight:700}
+  .sub{font-size:16px;opacity:.92;margin:0 0 22px}
+  .hero-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:26px}
+  .hero-card{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);
+    border-radius:12px;padding:14px 16px}
+  .hero-card b{display:block;font-size:15px;margin-bottom:4px}
+  .hero-card span{font-size:14px;opacity:.9;line-height:1.6}
+  h2{font-size:26px;margin:56px 0 8px;padding-top:14px;border-top:3px solid var(--ink)}
+  h2 .num{color:var(--move);font-size:20px;margin-right:8px}
+  h3{font-size:20px;margin:32px 0 8px;color:#22384d}
+  h4{font-size:17.5px;margin:22px 0 6px;color:#2f4f6f}
+  p{margin:10px 0}
+  ul,ol{margin:10px 0 10px 4px;padding-left:26px}
+  li{margin:6px 0}
+  a{color:var(--move)}
+  code{background:#eef3fb;border-radius:5px;padding:1px 6px;font-size:15px;
+    font-family:Consolas,"Courier New",monospace}
+  .fig{margin:26px 0 30px;background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:14px 14px 10px;box-shadow:0 2px 10px rgba(28,43,58,.05)}
+  .fig img,.fig svg{width:100%;height:auto;display:block;border-radius:8px}
+  .fig figcaption{font-size:14.5px;color:var(--muted);padding:10px 6px 2px;line-height:1.7}
+  .fig figcaption b{color:var(--ink)}
+  .note,.key,.trap,.calc{border-radius:12px;padding:16px 20px;margin:20px 0;font-size:16.5px}
+  .key{background:#eef7f1;border-left:6px solid var(--store)}
+  .note{background:#eef3fb;border-left:6px solid var(--move)}
+  .trap{background:#fdf1e6;border-left:6px solid var(--gold)}
+  .calc{background:#fdeeec;border-left:6px solid var(--atp)}
+  .note b,.key b,.trap b,.calc b{color:#17304a}
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-size:15.5px;background:#fff}
+  caption{caption-side:top;text-align:left;font-size:14.5px;color:var(--muted);padding-bottom:8px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#22384d;color:#fff;font-weight:600}
+  tr:nth-child(even) td{background:#f8fafc}
+  .toc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 24px;margin:8px 0 10px}
+  .toc h4{margin:0 0 8px}
+  .toc ol{columns:2;column-gap:34px;margin:0;padding-left:22px;font-size:16px}
+  @media(max-width:700px){.toc ol{columns:1}h1{font-size:26px}h2{font-size:22px}body{font-size:16px}}
+  details{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:12px 0}
+  summary{cursor:pointer;font-weight:600;color:#22384d}
+  details[open] summary{margin-bottom:8px}
+  .tag{display:inline-block;font-size:13px;padding:2px 9px;border-radius:20px;background:#eef3fb;
+    color:var(--move);margin-right:6px}
+  .small{font-size:14.5px;color:var(--muted)}
+  .refs{font-size:15px;color:var(--muted)}
+  .refs li{margin:8px 0}
+  hr.soft{border:0;border-top:1px dashed var(--line);margin:34px 0}
+  @media print{
+    body{background:#fff;font-size:12.5px}
+    header.hero{background:#22384d !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    h2{page-break-after:avoid}.fig{page-break-inside:avoid}
+  }
+
+  .langbar{position:fixed;right:18px;top:14px;z-index:20;display:flex;gap:8px;align-items:center}
+  .langbar a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-size:13.5px;
+    padding:8px 14px;border-radius:20px;border:1px solid #bcd4ee;background:#fff;color:#1c2b3a;
+    box-shadow:0 6px 18px rgba(28,43,58,.12)}
+  .langbar a.on{background:linear-gradient(135deg,#2f7fd1,#d94f45);color:#fff;border-color:transparent}
+  .langbar .hint{font-size:12px;color:#5b6b7c}
+  @media print{.langbar{display:none}}
+</style>
+</head>
+<body>
+
+<div class="langbar">
+  <span class="hint">语言 / Language</span>
+  <a class="on" href="article.html">中文</a>
+  <a href="article-en.html">EN</a>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker">零基础图解 · 细胞能量 × 分子马达 × 宏观做功</p>
+    <h1>细胞怎么“花钱”，分子马达怎么把你举起来</h1>
+    <p class="sub">从一口饭 → ATP → 肌球蛋白头的一次“划桨” → 10 厘米的肌肉收缩 → 20 公斤杠铃离地。<br>
+       这篇长文用图、数字和类比，把这条链条一次讲清，并把微观的“皮牛·纳米”与宏观的“焦耳·牛顿”对上账。</p>
+    <div class="hero-grid">
+      <div class="hero-card"><b>1 个 ATP</b><span>≈ 8×10⁻²⁰ J，够一次 10 nm 的划桨</span></div>
+      <div class="hero-card"><b>1 个肌球蛋白头</b><span>力 ≈ 4 pN，步长 ≈ 10 nm</span></div>
+      <div class="hero-card"><b>10¹⁷ 个马达</b><span>并联串联，形成几百牛的拉力</span></div>
+      <div class="hero-card"><b>效率 ≈ 22%</b><span>其余 78% 变热：这就是你会出汗的原因</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="toc">
+  <h4>目录</h4>
+  <ol>
+    <li><a href="#s0">60 秒速读版（先看这个）</a></li>
+    <li><a href="#s0b">5 句话读懂全文</a></li>
+    <li><a href="#s1">全局图：身体的能量流水线</a></li>
+    <li><a href="#s2">细胞怎么把饭变成 ATP</a></li>
+    <li><a href="#s3">肌肉的六层套娃：从肌肉到肌丝</a></li>
+    <li><a href="#s4">分子马达：细胞的“搬运工”与“划桨手”</a></li>
+    <li><a href="#s5">横桥循环：一次划桨的完整账本</a></li>
+    <li><a href="#s6">从小动作到大力量：放大的两个乘法</a></li>
+    <li><a href="#s7">举重全过程：一次动作的能量账本</a></li>
+    <li><a href="#s8">与宏观世界的对应：功、功率、效率、热</a></li>
+    <li><a href="#s9">常见误解与自测题</a></li>
+    <li><a href="#s10">附录：数据速查表与资料来源</a></li>
+  </ol>
+</div>
+
+<!-- ================================================================= -->
+<h2 id="s0"><span class="num">00</span>60 秒速读版（先看这个）</h2>
+
+<p>如果你只有一分钟，请记住这张“四段式”图景：</p>
+
+<table>
+  <caption>表 0　一分钟版全景</caption>
+  <tr><th>环节</th><th>发生了什么</th><th>用生活话说</th></tr>
+  <tr>
+    <td><b>① 备钱</b><br>（细胞呼吸）</td>
+    <td>葡萄糖 / 脂肪在线粒体里被逐步拆解，能量被存进 ATP（约 40% 存下，约 60% 变热）</td>
+    <td>把工资（饭）换成零钱（ATP），零钱罐很小，随用随取</td>
+  </tr>
+  <tr>
+    <td><b>② 付钱</b><br>（ATP 水解）</td>
+    <td>ATP → ADP + Pi，放出约 8×10⁻²⁰ J</td>
+    <td>给分子马达投一枚硬币，只够买“一小步”</td>
+  </tr>
+  <tr>
+    <td><b>③ 干活</b><br>（分子马达）</td>
+    <td>肌球蛋白头抓住细丝、旋转约 70°，拉动约 10 nm、出力约 4 pN</td>
+    <td>无数只手一起“划桨”，每只手只拉 1 厘米的十亿分之一</td>
+  </tr>
+  <tr>
+    <td><b>④ 见效</b><br>（放大成宏观）</td>
+    <td>10¹⁷ 只手并联叠力、10⁵ 个肌节串联叠位移，再经肌腱和骨骼杠杆放大</td>
+    <td>汇总成几百牛的拉力、几十厘米的动作——杠铃离地</td>
+  </tr>
+</table>
+
+<div class="key">
+  <b>一句话：</b>ATP 是零钱，马达是手，肌丝是绳，肌节是绳结，肌腱是缆，骨骼是杠杆，大脑是发令枪；
+  “举重”就是把 10¹⁷ 只手的 10 纳米小动作，汇总成 1 米的大动作。而全过程严格遵守：
+  <b>吃进去的化学能 = 对外做的功 + 变成的热</b>（肌肉约 78% 变热，所以你会出汗）。
+</div>
+
+<!-- ================================================================= -->
+<h2 id="s0b"><span class="num">00⁺</span>5 句话读懂全文</h2>
+
+<ol>
+  <li><b>身体不用“燃料”直接干活，用的是“现钞”ATP。</b>糖和脂肪是存款，线粒体是取款机，ATP 是细胞里唯一能立刻花的零钱；而且零钱罐很小，必须边花边赚。</li>
+  <li><b>1 个 ATP 水解只放出约 8×10⁻²⁰ 焦耳</b>——小得离谱，大约只够把 1 个细菌抬高 8 微米。所以细胞不能“点篝火”，只能一笔一笔付小钱。</li>
+  <li><b>把这些小钱变成动作的是分子马达（蛋白机器）。</b>肌球蛋白头抓一次、拉一下，位移约 10 纳米、力约 4 皮牛（4×10⁻¹² N），走完一次就消耗 1 个 ATP。</li>
+  <li><b>宏观力量来自“数量”：</b>约 10¹⁷ 个马达并联（叠力）+ 10⁵ 个肌节串联（叠位移），再经肌腱和骨骼的杠杆放大，才有 200–400 N 的拉力和几十厘米的动作。</li>
+  <li><b>微观与宏观能对上账：</b>吃进去的化学能 = 对外做的功 + 变成的热。肌肉做功效率约 22%，其余约 78% 变热——你举重时脸红、出汗，就是这个“损耗”的宏观表现。</li>
+</ol>
+
+<div class="key">
+  <b>一句话记忆法：</b>ATP 是零钱，马达是手，肌丝是绳，肌节是绳结，肌腱是缆，骨骼是杠杆，大脑是发令枪；
+  “举重”就是把 10¹⁷ 只手的 10 纳米小动作，汇总成 1 米的大动作。
+</div>
+
+<!-- ================================================================= -->
+<h2 id="s1"><span class="num">01</span>全局图：身体的能量流水线</h2>
+
+<p>先建立地理概念。能量在你的身体里要经过四次“换乘”：</p>
+<p style="text-align:center;font-size:16.5px">
+<b>食物（化学能）</b> → 消化吸收 → <b>细胞呼吸（线粒体）</b> → <b>ATP（通用现金）</b> → <b>分子马达（力）</b> → <b>宏观运动（举重、走路、心跳）</b>
+</p>
+
+<figure class="fig">
+  <img src="assets/fig01_energy_flow.png" alt="身体的能量流水线：从食物到 ATP 到肌肉收缩">
+  <figcaption><b>图 1</b>　能量在体内换四次手。注意两处关键数字：细胞呼吸大约只有 40% 的能量被存进 ATP，其余约 60% 直接变成热；而每个细胞的 ATP 存量只够用约 2 秒，必须“边用边造”。</figcaption>
+</figure>
+
+<figure class="fig">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="100%" height="auto" preserveAspectRatio="xMidYMid meet" font-family="Microsoft YaHei, SimSun, sans-serif">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d94f45"/>
+    </marker>
+    <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#9aa7b4"/>
+    </marker>
+    <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2f7fd1"/>
+    </marker>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#d94f45"/><stop offset="100%" stop-color="#7a5bd1"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="640" fill="#ffffff"/>
+  <text x="600" y="42" text-anchor="middle" font-size="27" font-weight="bold" fill="#1c2b3a" data-zh="从 1 个 ATP 分子到举起 100 公斤：一条被放大 10²⁰ 倍的因果链" data-en="From one ATP molecule to lifting 100 kg: a causal chain amplified 10^20 times">从 1 个 ATP 分子到举起 100 公斤：一条被放大 10²⁰ 倍的因果链</text>
+  <text x="600" y="72" text-anchor="middle" font-size="15" fill="#5b6b7c" data-zh="每一次分子级的“划桨”只有 10 纳米、4 皮牛的力；把 10¹⁷ 次这样的动作并联、串联起来，就是杠铃离地。" data-en="Each molecular stroke is only 10 nm and 4 pN; put 10^17 of them in parallel and series and the barbell leaves the floor.">每一次分子级的“划桨”只有 10 纳米、4 皮牛的力；把 10¹⁷ 次这样的动作并联、串联起来，就是杠铃离地。</text>
+
+  <!-- ============ 第 1 站：ATP ============ -->
+  <rect x="30" y="112" width="250" height="196" rx="14" fill="#fdeeec" stroke="#d94f45" stroke-width="2"/>
+  <text x="155" y="140" text-anchor="middle" font-size="16" font-weight="bold" fill="#d94f45" data-zh="① 化学能：1 个 ATP" data-en="1 Chemical energy: one ATP">① 化学能：1 个 ATP</text>
+  <circle cx="80" cy="190" r="15" fill="#7ac0e8" stroke="#1c2b3a"/>
+  <circle cx="120" cy="190" r="15" fill="#4a9bd6" stroke="#1c2b3a"/>
+  <circle cx="160" cy="190" r="15" fill="#d94f45" stroke="#1c2b3a"/>
+  <line x1="95" y1="190" x2="105" y2="190" stroke="#1c2b3a" stroke-width="3"/>
+  <line x1="135" y1="190" x2="145" y2="190" stroke="#1c2b3a" stroke-width="3"/>
+  <text x="80" y="196" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold">α</text>
+  <text x="120" y="196" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold">β</text>
+  <text x="160" y="196" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold">γ</text>
+  <text x="196" y="196" font-size="14" fill="#1c2b3a" data-zh="+ 腺苷" data-en="+ adenosine">+ 腺苷</text>
+  <text x="155" y="228" text-anchor="middle" font-size="14" fill="#1c2b3a">ATP + H₂O → ADP + Pi</text>
+  <text x="155" y="252" text-anchor="middle" font-size="14" fill="#d94f45" font-weight="bold" data-zh="释放 ≈ 8×10⁻²⁰ J" data-en="releases ~ 8x10^-20 J">释放 ≈ 8×10⁻²⁰ J</text>
+  <text x="155" y="278" text-anchor="middle" font-size="12" fill="#5b6b7c" data-zh="≈ 4 pN × 10 nm，够一次划桨" data-en="~ 4 pN x 10 nm: one stroke">≈ 4 pN × 10 nm，够一次划桨</text>
+  <text x="155" y="298" text-anchor="middle" font-size="12" fill="#5b6b7c" data-zh="（约一半变成热）" data-en="(about half becomes heat)">（约一半变成热）</text>
+
+  <line x1="283" y1="210" x2="325" y2="210" stroke="#9aa7b4" stroke-width="3" marker-end="url(#ag)"/>
+
+  <!-- ============ 第 2 站：肌球蛋白划桨 ============ -->
+  <rect x="330" y="112" width="330" height="196" rx="14" fill="#f4f0fd" stroke="#7a5bd1" stroke-width="2"/>
+  <text x="495" y="140" text-anchor="middle" font-size="16" font-weight="bold" fill="#7a5bd1" data-zh="② 分子马达：肌球蛋白头“划桨”" data-en="2 Molecular motor: the myosin head strokes">② 分子马达：肌球蛋白头“划桨”</text>
+  <!-- 细丝 -->
+  <line x1="360" y1="252" x2="630" y2="252" stroke="#2f7fd1" stroke-width="8" stroke-linecap="round"/>
+  <text x="495" y="276" text-anchor="middle" font-size="12" fill="#2f7fd1" data-zh="肌动蛋白细丝（粗 7 nm）" data-en="actin filament (7 nm)">肌动蛋白细丝（粗 7 nm）</text>
+  <!-- 粗肌丝 -->
+  <rect x="430" y="196" width="140" height="12" rx="6" fill="#7a5bd1"/>
+  <text x="592" y="184" font-size="12" fill="#7a5bd1" text-anchor="middle" data-zh="粗肌丝" data-en="thick filament">粗肌丝</text>
+  <!-- 三个带颈部的头部（绿色） -->
+  <g stroke="#3aa66b" stroke-width="4" fill="#3aa66b">
+    <line x1="446" y1="204" x2="452" y2="232"/>
+    <line x1="495" y1="204" x2="501" y2="232"/>
+    <line x1="544" y1="204" x2="550" y2="232"/>
+  </g>
+  <circle cx="453" cy="238" r="8" fill="#3aa66b" stroke="#1c2b3a"/>
+  <circle cx="502" cy="238" r="8" fill="#3aa66b" stroke="#1c2b3a"/>
+  <circle cx="551" cy="238" r="8" fill="#3aa66b" stroke="#1c2b3a"/>
+  <path d="M466,238 q10,-10 20,0" stroke="#d94f45" stroke-width="2.5" fill="none" marker-end="url(#ah)"/>
+  <text x="495" y="170" text-anchor="middle" font-size="12" fill="#3aa66b" data-zh="头部旋转约 70°，拖动细丝" data-en="the head rotates ~70 deg and pulls the filament">头部旋转约 70°，拖动细丝</text>
+  <text x="495" y="300" text-anchor="middle" font-size="13" fill="#1c2b3a" font-weight="bold" data-zh="每循环 1 个 ATP，走 10 nm，出力 4 pN" data-en="1 ATP per cycle, 10 nm per step, 4 pN of force">每循环 1 个 ATP，走 10 nm，出力 4 pN</text>
+
+  <line x1="663" y1="210" x2="705" y2="210" stroke="#9aa7b4" stroke-width="3" marker-end="url(#ag)"/>
+
+  <!-- ============ 第 3 站：肌节滑行 ============ -->
+  <rect x="710" y="112" width="210" height="196" rx="14" fill="#fff6ee" stroke="#e8833a" stroke-width="2"/>
+  <text x="815" y="140" text-anchor="middle" font-size="16" font-weight="bold" fill="#e8833a" data-zh="③ 肌节缩短" data-en="3 The sarcomere shortens">③ 肌节缩短</text>
+  <line x1="736" y1="182" x2="736" y2="262" stroke="#37474f" stroke-width="4"/>
+  <line x1="894" y1="182" x2="894" y2="262" stroke="#37474f" stroke-width="4"/>
+  <text x="736" y="176" text-anchor="middle" font-size="11" fill="#37474f" data-zh="Z 线" data-en="Z-disc">Z 线</text>
+  <text x="894" y="176" text-anchor="middle" font-size="11" fill="#37474f" data-zh="Z 线" data-en="Z-disc">Z 线</text>
+  <line x1="736" y1="206" x2="836" y2="206" stroke="#2f7fd1" stroke-width="5"/>
+  <line x1="794" y1="240" x2="894" y2="240" stroke="#2f7fd1" stroke-width="5"/>
+  <rect x="784" y="214" width="62" height="8" rx="4" fill="#7a5bd1"/>
+  <text x="815" y="286" text-anchor="middle" font-size="12" fill="#e8833a" font-weight="bold" data-zh="细丝滑向中央" data-en="the thin filament slides inward">细丝滑向中央</text>
+  <text x="815" y="300" text-anchor="middle" font-size="11" fill="#5b6b7c">2.2 µm → 1.6 µm</text>
+
+  <line x1="923" y1="210" x2="965" y2="210" stroke="#9aa7b4" stroke-width="3" marker-end="url(#ag)"/>
+
+  <!-- ============ 第 4 站：举起杠铃 ============ -->
+  <rect x="970" y="112" width="200" height="196" rx="14" fill="#eef3fb" stroke="#2f7fd1" stroke-width="2"/>
+  <text x="1070" y="140" text-anchor="middle" font-size="16" font-weight="bold" fill="#2f7fd1" data-zh="④ 宏观做功" data-en="4 Macroscopic work">④ 宏观做功</text>
+  <!-- 举重小人 -->
+  <g stroke="#1c2b3a" stroke-width="5" fill="none" stroke-linecap="round">
+    <circle cx="1070" cy="176" r="13" fill="#1c2b3a" stroke="none"/>
+    <line x1="1070" y1="189" x2="1070" y2="240"/>
+    <line x1="1070" y1="240" x2="1052" y2="272"/>
+    <line x1="1070" y1="240" x2="1088" y2="272"/>
+    <line x1="1070" y1="205" x2="1050" y2="182"/>
+    <line x1="1070" y1="205" x2="1090" y2="182"/>
+  </g>
+  <line x1="1026" y1="180" x2="1114" y2="180" stroke="#37474f" stroke-width="6"/>
+  <rect x="1018" y="166" width="14" height="28" rx="4" fill="#5b6b7c"/>
+  <rect x="1108" y="166" width="14" height="28" rx="4" fill="#5b6b7c"/>
+  <text x="1070" y="298" text-anchor="middle" font-size="12" fill="#2f7fd1" font-weight="bold" data-zh="对外做功 196 J" data-en="external work 196 J">对外做功 196 J</text>
+  <text x="1070" y="314" text-anchor="middle" font-size="11" fill="#5b6b7c">20 kg × 1 m</text>
+
+  <!-- ============ 下方：放大倍数与时间尺度 ============ -->
+  <rect x="30" y="340" width="1140" height="120" rx="14" fill="#f7f9fc" stroke="#dfe6ee"/>
+  <text x="600" y="368" text-anchor="middle" font-size="15" font-weight="bold" fill="#1c2b3a" data-zh="放大倍数一览（数量级估算，用于建立直觉）" data-en="Amplification at a glance (order-of-magnitude, for intuition)">放大倍数一览（数量级估算，用于建立直觉）</text>
+  <g font-size="13" fill="#1c2b3a">
+    <text x="60" y="398" data-zh="马达数量" data-en="number of motors">马达数量</text>
+    <text x="60" y="424" font-weight="bold" fill="#7a5bd1" data-zh="10¹⁷ 个肌球蛋白头" data-en="10^17 myosin heads">10¹⁷ 个肌球蛋白头</text>
+    <text x="330" y="398" data-zh="单步位移" data-en="step size">单步位移</text>
+    <text x="330" y="424" font-weight="bold" fill="#7a5bd1">10 nm = 10⁻⁸ m</text>
+    <text x="560" y="398" data-zh="串并联总位移" data-en="total displacement in series">串并联总位移</text>
+    <text x="560" y="424" font-weight="bold" fill="#7a5bd1" data-zh="10⁵ × 10 nm = 1 mm（肌节层）" data-en="10^5 x 10 nm = 1 mm (sarcomere level)">10⁵ × 10 nm = 1 mm（肌节层）</text>
+    <text x="900" y="398" data-zh="单马达力" data-en="force per motor">单马达力</text>
+    <text x="900" y="424" font-weight="bold" fill="#7a5bd1">4 pN = 4×10⁻¹² N</text>
+  </g>
+  <g font-size="13" fill="#1c2b3a">
+    <text x="60" y="450" data-zh="宏观结果：" data-en="Macroscopic result: ">宏观结果：</text>
+    <text x="145" y="450" fill="#2f7fd1" font-weight="bold" data-zh="1 块肱二头肌可产生 200–400 N 拉力，一次动作移动几十厘米——放大约 10¹² 倍（力）与 10⁷ 倍（位移）。" data-en="one biceps gives 200-400 N and moves tens of centimetres: about 10^12x in force and 10^7x in displacement.">1 块肱二头肌可产生 200–400 N 拉力，一次动作移动几十厘米——放大约 10¹² 倍（力）与 10⁷ 倍（位移）。</text>
+  </g>
+
+  <!-- 底部一句话 -->
+  <rect x="30" y="480" width="1140" height="130" rx="14" fill="#fdeeec" stroke="#d94f45" stroke-width="2"/>
+  <text x="600" y="512" text-anchor="middle" font-size="16" font-weight="bold" fill="#d94f45" data-zh="这就是全部秘密：不要指望 1 个马达举起杠铃" data-en="That is the whole secret: do not expect one motor to lift a barbell">这就是全部秘密：不要指望 1 个马达举起杠铃</text>
+  <text x="600" y="544" text-anchor="middle" font-size="14" fill="#1c2b3a" data-zh="ATP 提供“一次性付款”（约 8×10⁻²⁰ J），肌球蛋白头把它换成 10 nm 的位移和 4 pN 的力；" data-en="ATP pays once (about 8x10^-20 J); the myosin head turns it into 10 nm of movement and 4 pN of force;">ATP 提供“一次性付款”（约 8×10⁻²⁰ J），肌球蛋白头把它换成 10 nm 的位移和 4 pN 的力；</text>
+  <text x="600" y="570" text-anchor="middle" font-size="14" fill="#1c2b3a" data-zh="10¹⁷ 个这样的“付款”按同一方向并行、串联地累加，再经肌腱与骨骼的杠杆放大，就成为你看到的举重。" data-en="10^17 such payments add up in parallel and in series, and tendons and bones lever them into the lift you see.">10¹⁷ 个这样的“付款”按同一方向并行、串联地累加，再经肌腱与骨骼的杠杆放大，就成为你看到的举重。</text>
+  <text x="600" y="596" text-anchor="middle" font-size="13" fill="#5b6b7c" data-zh="能量守恒在这里完全成立：吃进去的化学能 = 对外做的功 + 变成的热（约 78% 变热，所以你会出汗）。" data-en="Energy is exactly conserved: chemical energy eaten = work done + heat released (about 78% becomes heat, hence the sweat).">能量守恒在这里完全成立：吃进去的化学能 = 对外做的功 + 变成的热（约 78% 变热，所以你会出汗）。</text>
+</svg>
+  <figcaption><b>图 1-b</b>　一张图看懂全链条：从 1 个 ATP 分子到举起 100 公斤，因果链被放大约 10²⁰ 倍。<span class="small">（图中文字随页面语言切换。）</span></figcaption>
+</figure>
+
+<h3>1.1 三个必须分清的“能量名词”</h3>
+<table>
+  <caption>表 1　三个层次的能量载体（这是全篇最容易混的地方）</caption>
+  <tr><th>层次</th><th>代表</th><th>在身体里的角色</th><th>规模感</th></tr>
+  <tr>
+    <td>存款<br>（长期储能）</td><td>脂肪、糖原</td>
+    <td>存放几个月到几天的能量；不能直接驱动马达</td>
+    <td>70 kg 成年人脂肪 + 糖原可存约 10 万千卡以上</td>
+  </tr>
+  <tr>
+    <td>现金<br>（即时货币）</td><td>ATP</td>
+    <td>唯一的“通用付款方式”，所有耗能反应都用它</td>
+    <td>全身 ATP 存量仅约 50–60 克，剧烈运动只够 2–3 秒</td>
+  </tr>
+  <tr>
+    <td>取款机<br>（转换装置）</td><td>线粒体、糖酵解酶系</td>
+    <td>把存款换成现金；氧气是这套系统的“助燃剂”</td>
+    <td>每个细胞有几百到几千个线粒体</td>
+  </tr>
+</table>
+
+<div class="note">
+  <b>为什么要这么麻烦？</b>因为细胞不能像发动机那样“一次烧掉一勺油”。一次放出太多能量会瞬间烧毁蛋白质和膜。
+  分成一个个 ATP 小包，既能精确控制位置（哪里需要就在哪里水解），又能精细调节速度（用力大就多水解几个）。
+</div>
+
+<!-- ================================================================= -->
+<h2 id="s2"><span class="num">02</span>细胞怎么把饭变成 ATP</h2>
+
+<h3>2.1 第一站：消化与吸收（把大分子拆成小分子）</h3>
+<p>碳水化合物被拆成葡萄糖，脂肪被拆成脂肪酸和甘油，蛋白质被拆成氨基酸。它们进入血液，被送到全身约 <b>37 万亿个细胞</b>。</p>
+
+<h3>2.2 第二站：细胞呼吸——三步把存款换成现金</h3>
+<ol>
+  <li><b>糖酵解（在细胞质里，不需要氧）：</b>1 个葡萄糖 → 2 个丙酮酸 + <b>净得 2 个 ATP</b>。速度极快，是短跑、举重的先头部队。</li>
+  <li><b>三羧酸循环（进入线粒体基质）：</b>把丙酮酸彻底拆开，释放出高能电子，交给“搬运工”NADH、FADH₂。</li>
+  <li><b>氧化磷酸化（线粒体内膜）：</b>电子沿呼吸链传递，把质子泵到膜的一侧，形成“质子水坝”；质子回流时推动 ATP 合酶这台旋转马达，<b>1 个葡萄糖总共可产出约 30–32 个 ATP</b>。</li>
+</ol>
+
+<figure class="fig">
+  <img src="assets/fig02_atp.png" alt="ATP 的结构、水解与再合成">
+  <figcaption><b>图 2</b>　ATP 的“放电”和“充电”。ATP 由腺苷 + 3 个磷酸组成；水解掉末端那个磷酸（γ），就变成 ADP + Pi，同时放出约 50 kJ/mol 的自由能。注意：<b>ATP 不是燃料，而是能量的“搬运工”</b>——它自己只负责把能量递到需要的地方。</figcaption>
+</figure>
+
+<div class="calc">
+  <b>算一算：1 个 ATP 到底有多少能量？</b><br>
+  生理条件下 1 mol ATP 水解约放出 50 kJ = 5×10⁴ J，1 mol 有 6.02×10²³ 个分子：<br>
+  5×10⁴ ÷ 6.02×10²³ ≈ <b>8×10⁻²⁰ J / 个 ATP</b>。<br>
+  这点能量能干什么？把一个 10⁻¹⁵ kg 的细菌抬高 8 微米，或者让 4 pN 的力移动 10 nm（正好是一次划桨的功）。
+</div>
+
+<h3>2.3 身体的“日流水”：为什么 ATP 这么少却够用</h3>
+<table>
+  <caption>表 2　ATP 的存量与流量（70 kg 成年人估算，量级示意）</caption>
+  <tr><th>项目</th><th>数量</th><th>换算</th></tr>
+  <tr><td>全身 ATP 总量</td><td>约 50–60 克</td><td>约 8×10²² 个分子，只够剧烈运动 2–3 秒</td></tr>
+  <tr><td>每天 ATP 周转量</td><td>约 50–75 公斤</td><td>约为体重的 1 倍，约 10²⁶ 个分子/天</td></tr>
+  <tr><td>周转倍数</td><td>约 1000 倍</td><td>每个 ATP 分子每天被“充放电”约 1000 次以上</td></tr>
+  <tr><td>剧烈运动的瞬时需求</td><td>约 10²² 个/秒</td><td>比静息时高约 100 倍——这就是“瓶颈”所在</td></tr>
+</table>
+
+<p>因为“存款→现金”的转换速度有限，身体准备了三套不同功率的供能系统：</p>
+
+<figure class="fig">
+  <img src="assets/fig10_power_time.png" alt="三大供能系统的功率上限与每日 ATP 去向">
+  <figcaption><b>图 10</b>　左：三大供能系统的“功率–续航”曲线（示意）。磷酸原系统（ATP + 磷酸肌酸）功率最高但只能撑几秒；糖酵解接力几十秒到两分钟；有氧氧化功率最低却几乎无限续航。<br>右：一天的 ATP 大部分花在“维持活着”上（离子泵、蛋白质合成、体温），运动只是在永不停机的机器上再加速。</figcaption>
+</figure>
+
+<div class="key">
+  <b>与举重的直接联系：</b>一次最大用力举重主要吃“磷酸原系统”的 3–5 秒配额；练力量时你会感觉“憋一口气只能来一下”，
+  这既是神经与力学问题，也是 ATP 现货补充速度问题。想连续做 10 次，中间必须留出 1–3 分钟让磷酸肌酸回充。
+</div>
+
+<!-- ================================================================= -->
+<h2 id="s3"><span class="num">03</span>肌肉的六层套娃：从肌肉到肌丝</h2>
+
+<p>要理解“小动作怎么变大力量”，先要看清楚肌肉是如何一层层打包的。</p>
+
+<figure class="fig">
+  <img src="assets/fig03_muscle_hierarchy.png" alt="肌肉的六层结构：肌肉、肌束、肌纤维、肌原纤维、肌节、粗细肌丝">
+  <figcaption><b>图 3</b>　肌肉的六层套娃。每向下一层，尺寸缩小、数量放大：1 块肌肉 → 10⁵ 根肌纤维 → 10⁸ 根肌原纤维 → 10¹³ 个肌节 → 10¹⁷ 个肌球蛋白头。<b>“放大”的秘密就在这些数量级里。</b></figcaption>
+</figure>
+
+<h3>3.1 肌节：肌肉真正的“发动机单元”</h3>
+<p>肌节是两条 Z 线之间的一段，静止时长约 2.2 微米。里面主要是两种丝：</p>
+<ul>
+  <li><b>粗肌丝</b>（直径约 15 nm）：由肌球蛋白（myosin）组成，丝上伸出许多“头部”，就是分子马达。</li>
+  <li><b>细肌丝</b>（直径约 7 nm）：由肌动蛋白（actin）双螺旋组成，是马达走的“轨道”；上面还缠着原肌球蛋白和肌钙蛋白，充当<b>安全开关</b>。</li>
+</ul>
+
+<figure class="fig">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 730" width="100%" height="auto" preserveAspectRatio="xMidYMid meet" font-family="Microsoft YaHei, SimSun, sans-serif">
+  <defs>
+    <marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6b7c"/>
+    </marker>
+    <marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d94f45"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="auto" preserveAspectRatio="xMidYMid meet" fill="#ffffff"/>
+
+  <text x="580" y="40" text-anchor="middle" font-size="25" font-weight="bold" fill="#1c2b3a">肌节的解剖与两种状态：为什么“滑行”能让肌肉变短却不改变粗肌丝长度</text>
+  <text x="580" y="68" text-anchor="middle" font-size="14" fill="#5b6b7c">一个肌节 = 两条 Z 线之间的一段；粗细肌丝本身长度不变，变的只是它们重叠的多少。</text>
+
+  <!-- ================= 舒张状态 ================= -->
+  <text x="40" y="120" font-size="17" font-weight="bold" fill="#5b6b7c">舒张（肌节长 2.2 µm，钙离子被泵回肌浆网）</text>
+  <g>
+    <!-- Z 线 -->
+    <line x1="90" y1="150" x2="90" y2="290" stroke="#37474f" stroke-width="6"/>
+    <line x1="1070" y1="150" x2="1070" y2="290" stroke="#37474f" stroke-width="6"/>
+    <text x="90" y="142" text-anchor="middle" font-size="13" fill="#37474f" font-weight="bold">Z 线</text>
+    <text x="1070" y="142" text-anchor="middle" font-size="13" fill="#37474f" font-weight="bold">Z 线</text>
+    <!-- 细丝（上下两条，从两侧 Z 线伸入） -->
+    <line x1="90" y1="180" x2="620" y2="180" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="1070" y1="262" x2="540" y2="262" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="90" y1="262" x2="620" y2="262" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="1070" y1="180" x2="540" y2="180" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <!-- 粗肌丝（居中） -->
+    <rect x="480" y="212" width="200" height="18" rx="9" fill="#7a5bd1"/>
+    <!-- 横桥 -->
+    <g stroke="#3aa66b" stroke-width="4" fill="#3aa66b">
+      <line x1="495" y1="212" x2="489" y2="192"/><line x1="527" y1="212" x2="521" y2="192"/>
+      <line x1="559" y1="212" x2="553" y2="192"/><line x1="591" y1="212" x2="585" y2="192"/>
+      <line x1="623" y1="212" x2="617" y2="192"/><line x1="655" y1="212" x2="649" y2="192"/>
+      <line x1="495" y1="230" x2="489" y2="250"/><line x1="527" y1="230" x2="521" y2="250"/>
+      <line x1="559" y1="230" x2="553" y2="250"/><line x1="591" y1="230" x2="585" y2="250"/>
+      <line x1="623" y1="230" x2="617" y2="250"/><line x1="655" y1="230" x2="649" y2="250"/>
+    </g>
+    <text x="580" y="322" text-anchor="middle" font-size="13" fill="#3aa66b">肌球蛋白头（横桥）大多处于“未结合”状态</text>
+    <!-- 尺寸标注 -->
+    <line x1="90" y1="342" x2="1070" y2="342" stroke="#9aa7b4" stroke-width="2" marker-start="url(#m2)" marker-end="url(#m2)"/>
+    <text x="580" y="366" text-anchor="middle" font-size="13" fill="#5b6b7c">整个肌节 = 2.2 µm</text>
+    <line x1="480" y1="392" x2="680" y2="392" stroke="#7a5bd1" stroke-width="2" marker-start="url(#m2)" marker-end="url(#m2)"/>
+    <text x="580" y="414" text-anchor="middle" font-size="13" fill="#7a5bd1" font-weight="bold">A 带（粗肌丝长度）≈ 1.6 µm，永不改变</text>
+    <line x1="90" y1="440" x2="480" y2="440" stroke="#2f7fd1" stroke-width="2" marker-start="url(#m2)" marker-end="url(#m2)"/>
+    <text x="285" y="462" text-anchor="middle" font-size="13" fill="#2f7fd1">I 带（只有细丝）宽</text>
+    <line x1="680" y1="440" x2="1070" y2="440" stroke="#2f7fd1" stroke-width="2" marker-start="url(#m2)" marker-end="url(#m2)"/>
+    <text x="875" y="462" text-anchor="middle" font-size="13" fill="#2f7fd1">I 带宽</text>
+    <line x1="600" y1="212" x2="600" y2="290" stroke="#d94f45" stroke-width="2" stroke-dasharray="4 3"/>
+    <line x1="560" y1="212" x2="560" y2="290" stroke="#d94f45" stroke-width="2" stroke-dasharray="4 3"/>
+    <text x="580" y="500" text-anchor="middle" font-size="13" fill="#d94f45">H 区（只有粗肌丝）也较宽</text>
+  </g>
+
+  <!-- 收缩箭头 -->
+  <line x1="580" y1="520" x2="580" y2="556" stroke="#d94f45" stroke-width="4" marker-end="url(#m3)"/>
+  <text x="600" y="545" font-size="14" fill="#d94f45" font-weight="bold">神经信号 → 钙离子释放 → 横桥循环启动 → 细丝滑向中央</text>
+
+  <!-- ================= 收缩状态 ================= -->
+  <text x="40" y="596" font-size="17" font-weight="bold" fill="#d94f45">收缩（肌节短到 1.6 µm：细丝滑入更深，重叠区变长）</text>
+  <g>
+    <line x1="230" y1="612" x2="230" y2="690" stroke="#37474f" stroke-width="6"/>
+    <line x1="930" y1="612" x2="930" y2="690" stroke="#37474f" stroke-width="6"/>
+    <line x1="230" y1="632" x2="640" y2="632" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="930" y1="632" x2="520" y2="632" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="230" y1="672" x2="640" y2="672" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="930" y1="672" x2="520" y2="672" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <rect x="490" y="644" width="180" height="16" rx="8" fill="#7a5bd1"/>
+    <g stroke="#3aa66b" stroke-width="4" fill="#3aa66b">
+      <line x1="505" y1="644" x2="499" y2="636"/><line x1="545" y1="644" x2="539" y2="636"/>
+      <line x1="585" y1="644" x2="579" y2="636"/><line x1="625" y1="644" x2="619" y2="636"/>
+      <line x1="665" y1="644" x2="659" y2="636"/>
+      <line x1="505" y1="660" x2="499" y2="668"/><line x1="545" y1="660" x2="539" y2="668"/>
+      <line x1="585" y1="660" x2="579" y2="668"/><line x1="625" y1="660" x2="619" y2="668"/>
+      <line x1="665" y1="660" x2="659" y2="668"/>
+    </g>
+    <text x="580" y="700" text-anchor="middle" font-size="13" fill="#d94f45" font-weight="bold">两根 Z 线被拉近 0.6 µm；A 带仍是 1.6 µm，I 带与 H 区明显变窄——这就是“滑行”的铁证。</text>
+  </g>
+</svg>
+  <figcaption><b>图 4</b>　肌节的解剖与两种状态。舒张时（上），细丝与粗肌丝重叠少，I 带和 H 区宽；收缩时（下），细丝向中央滑入更深，<b>两根 Z 线被拉近，但 A 带（粗肌丝）长度始终不变</b>。这正是 1954 年 Huxley 滑行学说的关键证据：肌肉变短不是因为“丝被压缩”，而是因为“丝互相插进去”。<span class="small">（若上方图形未显示，见同目录下的 <code>assets/extra_sarcomere.svg</code> 文件。）</span></figcaption>
+</figure>
+
+<figure class="fig">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 730" width="100%" height="auto" preserveAspectRatio="xMidYMid meet" font-family="Microsoft YaHei, SimSun, sans-serif">
+  <defs>
+    <marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6b7c"/>
+    </marker>
+    <marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d94f45"/>
+    </marker>
+  </defs>
+  <rect width="1160" height="730" fill="#ffffff"/>
+
+  <text x="580" y="40" text-anchor="middle" font-size="25" font-weight="bold" fill="#1c2b3a" data-zh="肌节的解剖与两种状态：为什么“滑行”能让肌肉变短却不改变粗肌丝长度" data-en="Anatomy of the sarcomere: why sliding shortens the muscle but not the thick filament">肌节的解剖与两种状态：为什么“滑行”能让肌肉变短却不改变粗肌丝长度</text>
+  <text x="580" y="68" text-anchor="middle" font-size="14" fill="#5b6b7c" data-zh="一个肌节 = 两条 Z 线之间的一段；粗细肌丝本身长度不变，变的只是它们重叠的多少。" data-en="One sarcomere = the segment between two Z-discs; the filaments keep their length, only the overlap changes.">一个肌节 = 两条 Z 线之间的一段；粗细肌丝本身长度不变，变的只是它们重叠的多少。</text>
+
+  <!-- ================= 舒张状态 ================= -->
+  <text x="40" y="120" font-size="17" font-weight="bold" fill="#5b6b7c" data-zh="舒张（肌节长 2.2 µm，钙离子被泵回肌浆网）" data-en="Relaxed (sarcomere 2.2 um, calcium pumped back into the SR)">舒张（肌节长 2.2 µm，钙离子被泵回肌浆网）</text>
+  <g>
+    <!-- Z 线 -->
+    <line x1="90" y1="150" x2="90" y2="290" stroke="#37474f" stroke-width="6"/>
+    <line x1="1070" y1="150" x2="1070" y2="290" stroke="#37474f" stroke-width="6"/>
+    <text x="90" y="142" text-anchor="middle" font-size="13" fill="#37474f" font-weight="bold" data-zh="Z 线" data-en="Z-disc">Z 线</text>
+    <text x="1070" y="142" text-anchor="middle" font-size="13" fill="#37474f" font-weight="bold" data-zh="Z 线" data-en="Z-disc">Z 线</text>
+    <!-- 细丝（上下两条，从两侧 Z 线伸入） -->
+    <line x1="90" y1="180" x2="620" y2="180" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="1070" y1="262" x2="540" y2="262" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="90" y1="262" x2="620" y2="262" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="1070" y1="180" x2="540" y2="180" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <!-- 粗肌丝（居中） -->
+    <rect x="480" y="212" width="200" height="18" rx="9" fill="#7a5bd1"/>
+    <!-- 横桥 -->
+    <g stroke="#3aa66b" stroke-width="4" fill="#3aa66b">
+      <line x1="495" y1="212" x2="489" y2="192"/><line x1="527" y1="212" x2="521" y2="192"/>
+      <line x1="559" y1="212" x2="553" y2="192"/><line x1="591" y1="212" x2="585" y2="192"/>
+      <line x1="623" y1="212" x2="617" y2="192"/><line x1="655" y1="212" x2="649" y2="192"/>
+      <line x1="495" y1="230" x2="489" y2="250"/><line x1="527" y1="230" x2="521" y2="250"/>
+      <line x1="559" y1="230" x2="553" y2="250"/><line x1="591" y1="230" x2="585" y2="250"/>
+      <line x1="623" y1="230" x2="617" y2="250"/><line x1="655" y1="230" x2="649" y2="250"/>
+    </g>
+    <text x="580" y="322" text-anchor="middle" font-size="13" fill="#3aa66b" data-zh="肌球蛋白头（横桥）大多处于“未结合”状态" data-en="most myosin heads (cross-bridges) are not attached">肌球蛋白头（横桥）大多处于“未结合”状态</text>
+    <!-- 尺寸标注 -->
+    <line x1="90" y1="342" x2="1070" y2="342" stroke="#9aa7b4" stroke-width="2" marker-start="url(#m2)" marker-end="url(#m2)"/>
+    <text x="580" y="366" text-anchor="middle" font-size="13" fill="#5b6b7c" data-zh="整个肌节 = 2.2 µm" data-en="whole sarcomere = 2.2 um">整个肌节 = 2.2 µm</text>
+    <line x1="480" y1="392" x2="680" y2="392" stroke="#7a5bd1" stroke-width="2" marker-start="url(#m2)" marker-end="url(#m2)"/>
+    <text x="580" y="414" text-anchor="middle" font-size="13" fill="#7a5bd1" font-weight="bold" data-zh="A 带（粗肌丝长度）≈ 1.6 µm，永不改变" data-en="A-band (thick filament) ~ 1.6 um, never changes">A 带（粗肌丝长度）≈ 1.6 µm，永不改变</text>
+    <line x1="90" y1="440" x2="480" y2="440" stroke="#2f7fd1" stroke-width="2" marker-start="url(#m2)" marker-end="url(#m2)"/>
+    <text x="285" y="462" text-anchor="middle" font-size="13" fill="#2f7fd1" data-zh="I 带（只有细丝）宽" data-en="I-band (thin only) is wide">I 带（只有细丝）宽</text>
+    <line x1="680" y1="440" x2="1070" y2="440" stroke="#2f7fd1" stroke-width="2" marker-start="url(#m2)" marker-end="url(#m2)"/>
+    <text x="875" y="462" text-anchor="middle" font-size="13" fill="#2f7fd1" data-zh="I 带宽" data-en="I-band width">I 带宽</text>
+    <line x1="600" y1="212" x2="600" y2="290" stroke="#d94f45" stroke-width="2" stroke-dasharray="4 3"/>
+    <line x1="560" y1="212" x2="560" y2="290" stroke="#d94f45" stroke-width="2" stroke-dasharray="4 3"/>
+    <text x="580" y="500" text-anchor="middle" font-size="13" fill="#d94f45" data-zh="H 区（只有粗肌丝）也较宽" data-en="H-zone (thick only) is also wide">H 区（只有粗肌丝）也较宽</text>
+  </g>
+
+  <!-- 收缩箭头 -->
+  <line x1="580" y1="520" x2="580" y2="556" stroke="#d94f45" stroke-width="4" marker-end="url(#m3)"/>
+  <text x="600" y="545" font-size="14" fill="#d94f45" font-weight="bold" data-zh="神经信号 → 钙离子释放 → 横桥循环启动 → 细丝滑向中央" data-en="nerve signal -&gt; Ca2+ release -&gt; cross-bridge cycle -&gt; filaments slide inward">神经信号 → 钙离子释放 → 横桥循环启动 → 细丝滑向中央</text>
+
+  <!-- ================= 收缩状态 ================= -->
+  <text x="40" y="596" font-size="17" font-weight="bold" fill="#d94f45" data-zh="收缩（肌节短到 1.6 µm：细丝滑入更深，重叠区变长）" data-en="Contracted (sarcomere down to 1.6 um: filaments slide deeper, overlap grows)">收缩（肌节短到 1.6 µm：细丝滑入更深，重叠区变长）</text>
+  <g>
+    <line x1="230" y1="612" x2="230" y2="690" stroke="#37474f" stroke-width="6"/>
+    <line x1="930" y1="612" x2="930" y2="690" stroke="#37474f" stroke-width="6"/>
+    <line x1="230" y1="632" x2="640" y2="632" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="930" y1="632" x2="520" y2="632" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="230" y1="672" x2="640" y2="672" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <line x1="930" y1="672" x2="520" y2="672" stroke="#2f7fd1" stroke-width="7" stroke-linecap="round"/>
+    <rect x="490" y="644" width="180" height="16" rx="8" fill="#7a5bd1"/>
+    <g stroke="#3aa66b" stroke-width="4" fill="#3aa66b">
+      <line x1="505" y1="644" x2="499" y2="636"/><line x1="545" y1="644" x2="539" y2="636"/>
+      <line x1="585" y1="644" x2="579" y2="636"/><line x1="625" y1="644" x2="619" y2="636"/>
+      <line x1="665" y1="644" x2="659" y2="636"/>
+      <line x1="505" y1="660" x2="499" y2="668"/><line x1="545" y1="660" x2="539" y2="668"/>
+      <line x1="585" y1="660" x2="579" y2="668"/><line x1="625" y1="660" x2="619" y2="668"/>
+      <line x1="665" y1="660" x2="659" y2="668"/>
+    </g>
+    <text x="580" y="700" text-anchor="middle" font-size="13" fill="#d94f45" font-weight="bold" data-zh="两根 Z 线被拉近 0.6 µm；A 带仍是 1.6 µm，I 带与 H 区明显变窄——这就是“滑行”的铁证。" data-en="The two Z-discs are pulled 0.6 um closer; the A-band stays 1.6 um while the I-band and H-zone narrow - the proof of sliding.">两根 Z 线被拉近 0.6 µm；A 带仍是 1.6 µm，I 带与 H 区明显变窄——这就是“滑行”的铁证。</text>
+  </g>
+</svg>
+  <figcaption><b>图 4-b</b>　肌节的解剖与两种状态（矢量示意图）。舒张时细丝与粗肌丝重叠少，I 带和 H 区宽；收缩时细丝滑入更深，两根 Z 线被拉近，而 A 带长度始终不变。<span class="small">（图中文字随页面语言切换。）</span></figcaption>
+</figure>
+
+<div class="note">
+  <b>钙离子是总开关，ATP 是总闸门。</b>
+  <ul style="margin-bottom:0">
+    <li>神经信号到达 → 肌浆网释放 Ca²⁺ → 肌钙蛋白变形 → 原肌球蛋白挪开 → 肌动蛋白露出结合位点 → 马达可以抓丝（<b>此时才开始收缩</b>）。</li>
+    <li>神经信号停止 → 钙泵（SERCA）把 Ca²⁺ 泵回肌浆网（<b>这一步也消耗 ATP</b>）→ 开关复位 → 肌肉舒张。</li>
+    <li>如果 ATP 完全耗尽，马达无法“松手”，肌肉会一直僵住——这就是死亡后的“尸僵”。<b>ATP 在这里的作用居然是“松手”</b>，非常反直觉。</li>
+  </ul>
+</div>
+
+<!-- ================================================================= -->
+<h2 id="s4"><span class="num">04</span>分子马达：细胞的“搬运工”与“划桨手”</h2>
+
+<p>分子马达是一类蛋白质机器：它们能<b>把 ATP 水解的化学能直接转换成定向的机械运动</b>，不需要齿轮、曲轴或活塞。人体里有三大类最出名：</p>
+
+<figure class="fig">
+  <img src="assets/fig07_motor_families.png" alt="三大分子马达家族：肌球蛋白、驱动蛋白、旋转马达">
+  <figcaption><b>图 7</b>　三大分子马达家族与关键参数对照。肌球蛋白 Ⅱ 走肌动蛋白丝、负责肌肉收缩；驱动蛋白和动力蛋白走微管、负责细胞内运输；ATP 合酶与细菌鞭毛马达则是“旋转式”，靠质子流驱动。<b>它们的工作语言都是 ATP。</b></figcaption>
+</figure>
+
+<h3>4.1 三种“走路姿势”</h3>
+<ul>
+  <li><b>肌球蛋白 Ⅱ（拉绳式）：</b>两个头交替抓住肌动蛋白丝并旋转“划桨”，一次约 10 nm；它是集体作业，成千上万个头同时拉，形成持续的力。</li>
+  <li><b>驱动蛋白（手递手走路式）：</b>两个头交替迈步，每步 8 nm，像人走路一样沿着微管前进，身后拖着一个囊泡货物。它是“独行快递员”，负责把物质从细胞中心运到外围。</li>
+  <li><b>旋转马达（水轮式）：</b>ATP 合酶让质子流冲过膜内的通道，带动转子旋转，每转约 120° 装上一个磷酸，转 3 步造出 3 个 ATP；细菌鞭毛马达则用同样的原理把自己变成螺旋桨。</li>
+</ul>
+
+<div class="calc">
+  <b>数字直觉：这些马达有多“微观”？</b>
+  <ul style="margin-bottom:0">
+    <li>力：1 个肌球蛋白头约 <b>4 pN = 4×10⁻¹² N</b>。作为对比，一根头发丝的重量约 10⁻⁷ N，也就是说头发自重是它的 <b>2.5 万倍</b>。</li>
+    <li>步长：约 <b>10 nm = 10⁻⁸ m</b>，大约是一根头发的十万分之一粗，等于 3–4 个肌动蛋白单体的间距（每个单体约 2.7 nm）。</li>
+    <li>速度：无负荷时每秒可走 10–20 步，即 0.1–0.2 µm/s 到几个 µm/s，比树懒还慢；但数量极多，所以宏观上并不慢。</li>
+  </ul>
+</div>
+
+<div class="trap">
+  <b>反直觉但关键：ATP 的作用首先是“让马达松手”。</b>
+  肌球蛋白头一旦抓住肌动蛋白（强直状态），<b>必须结合一个新的 ATP 才能脱离</b>。
+  所以：ATP 多 → 松手快 → 循环快 → 收缩快而灵活；ATP 耗尽 → 全部僵住 → 尸僵。
+</div>
+
+<!-- ================================================================= -->
+<h2 id="s5"><span class="num">05</span>横桥循环：一次划桨的完整账本</h2>
+
+<p>把镜头推到单个肌球蛋白头上，它的“工作日”是这样的五步循环：</p>
+
+<figure class="fig">
+  <img src="assets/fig05_crossbridge.png" alt="横桥循环的五个步骤：结合 ATP、上膛、抓丝、划桨、强直等待">
+  <figcaption><b>图 5</b>　横桥循环五个步骤。<b>① 结合 ATP</b>（脱离细丝）→ <b>② 水解上膛</b>（ATP → ADP + Pi，头部像扳起扳机一样旋转蓄能）→ <b>③ 弱结合抓丝</b> → <b>④ 划桨做功</b>（Pi、ADP 依次脱落，头部旋转约 70°，拉动细丝约 10 nm、出力约 4 pN）→ <b>⑤ 强直等待</b>，直到下一个 ATP 到来才能松手重新开始。每循环消耗 1 个 ATP。</figcaption>
+</figure>
+
+<h3>5.1 能量账本（单次循环）</h3>
+<table>
+  <caption>表 3　一次横桥循环的能量收支（数量级估算）</caption>
+  <tr><th>项目</th><th>数值</th><th>说明</th></tr>
+  <tr><td>投入：ATP 水解自由能</td><td>≈ 8×10⁻²⁰ J</td><td>生理条件下 ΔG ≈ −50 kJ/mol</td></tr>
+  <tr><td>产出：对外机械功</td><td>F × d = 4 pN × 10 nm ≈ 4×10⁻²⁰ J</td><td>假设全程满载出力</td></tr>
+  <tr><td>产出：变成热的部分</td><td>≈ 4×10⁻²⁰ J</td><td>单分子层面效率约 50%（受负载影响）</td></tr>
+  <tr><td>整块肌肉的效率</td><td>约 22%（做功效率）</td><td>因为还要养钙泵、钠钾泵，并克服组织黏弹性</td></tr>
+</table>
+
+<div class="note">
+  <b>注意两个不同的“效率”不要混淆：</b><br>
+  ① <b>单个马达的转换效率</b>（化学能 → 机械功）在合适负载下可达 30–50%；<br>
+  ② <b>整块肌肉做功效率</b>（对外做的功 ÷ 总代谢能）通常只有 20–25%，因为还包括钙泵、钠钾泵、基础代谢等开销。<br>
+  这也解释了为什么“健身房里同样的动作，有的人更累”：动作模式不同，内部的无效功和等长成分不同。
+</div>
+
+<h3>5.2 力与速度的取舍：为什么举重要慢</h3>
+
+<figure class="fig">
+  <img src="assets/fig06_force_velocity.png" alt="肌肉的力-速度关系与日常动作的落点">
+  <figcaption><b>图 6</b>　肌肉的“变速箱”。A：Hill 方程描述的力–速度关系——缩短速度越快，能出的力越小；两者相乘得到的功率在中间速度（约 1/3 最大力、1/3 最大速度）达到峰值。B：日常动作各自落在曲线的不同位置：举重落在“高力低速”端，冲刺跑落在“高速低力”端，最大功率输出（如全力踩车）在中间。</figcaption>
+</figure>
+
+<div class="key">
+  <b>这条曲线解释了三个日常现象：</b>
+  <ul style="margin-bottom:0">
+    <li>举重必须放慢：想要最大力，就必须接近等长收缩（速度≈0）。</li>
+    <li>平板支撑、举着不动很累：对外做功为 0，但马达仍在循环、钙泵仍在抽钙、钠钾泵仍在补电位，ATP 照烧。</li>
+    <li>“最大功率”的动作（如全力骑车、壶铃摆荡）不会用极限重量，而是用中等重量快速移动——这正好落在曲线中部。</li>
+  </ul>
+</div>
+
+<!-- ================================================================= -->
+<h2 id="s6"><span class="num">06</span>从小动作到大力量：放大的两个乘法</h2>
+
+<p>这是全篇最核心的一节：<b>纳米级的分子动作如何变成几百牛的宏观力？</b>答案是两个“乘法”：</p>
+
+<figure class="fig">
+  <img src="assets/fig08_scale_ladder.png" alt="从 1 纳米到 1 米：力与位移的放大阶梯">
+  <figcaption><b>图 8</b>　尺度阶梯。每一层都是“上一层的小量 × 巨大的数量”。单马达 4 pN，整块肱二头肌可达 200–400 N；单步 10 nm，整条肌肉的肌节串联后缩短毫米级，再经杠杆放大成几十厘米。</figcaption>
+</figure>
+
+<h3>6.1 乘法一：并联叠力（把力加起来）</h3>
+<p>同一时刻，成千上万个马达朝着同一方向拉，它们的力是<b>并联叠加</b>的：</p>
+<ul>
+  <li>1 个肌球蛋白头：约 4 pN。</li>
+  <li>1 根粗肌丝：约 300 个头部，其中一部分处于结合状态 → 合计约 <b>0.1–1 nN</b>。</li>
+  <li>1 根肌纤维（约 10⁵ 根肌原纤维、几百万根粗肌丝并联）→ 约 <b>1 mN</b> 量级。</li>
+  <li>1 块肱二头肌（约 10⁵ 根肌纤维并联）→ <b>200–400 N</b>。</li>
+</ul>
+<p>从 4 pN 到 300 N，放大了约 <b>10¹⁴ 倍</b>。</p>
+
+<div class="note">
+  <b>为什么不是简单地把 10¹⁷ × 4 pN 全加起来？</b>因为真实的肌肉有三个“折扣”：
+  ① 不是所有头部在同一瞬间都结合着（每次只有一部分在拉，占空比很低，快肌约 5% 量级）；
+  ② 头的方向和肌丝的夹角会损失一部分分力；
+  ③ 钙调控、疲劳与代谢限制。
+  所以实际肌肉的最大张力约 <b>300 kN/m²（约 3 kg/cm²）</b>，这个数字与“每个头 4 pN、头部密度约 10⁹ 个/mm²、占空比约 5%”完全自洽——微观参数与宏观测量在这里对上了账。
+</div>
+
+<h3>6.2 乘法二：串联叠位移（把行程加起来）</h3>
+<p>肌肉变短的总量，是<b>所有串联肌节的缩短量之和</b>：</p>
+<ul>
+  <li>1 个肌节：从 2.2 µm 缩到 1.6 µm，缩短约 <b>0.6 µm</b>（每个头贡献其中 10 nm 级的一小步，靠反复循环累积）。</li>
+  <li>1 根 10 cm 长的肌纤维：约 10⁵ 个肌节串联 → 总缩短可达 <b>数厘米</b>。</li>
+  <li>再加上肌腱的弹性储能与骨骼杠杆（关节力臂），最终表现为手移动几十厘米、杠铃上升 1 米。</li>
+</ul>
+
+<div class="calc">
+  <b>两个乘法的“订单量”：</b>一次把 20 kg 举高 1 m，需要约 10²² 个 ATP 分子被水解（见第 7 节的计算）。
+  如果想象成“马达订单”，那大约是 10²² 次划桨——而你只花掉约半千卡的能量，相当于一粒花生米。
+</div>
+
+<!-- ================================================================= -->
+<h2 id="s7"><span class="num">07</span>举重全过程：从想吃东西到杠铃离地</h2>
+
+<figure class="fig">
+  <img src="assets/hero_chain.svg" alt="从 1 个 ATP 到举起 100 公斤的完整因果链">
+  <figcaption><b>图 9</b>　全链条总览：ATP 水解 → 肌球蛋白头旋转 → 细丝滑行 → 肌节缩短 → 肌纤维缩短 → 肌肉产生拉力 → 肌腱拉动骨骼形成杠杆 → 杠铃离地。每一步都只是“上一层的小动作 × 巨大的数量”。<span class="small">（若未显示，见 <code>assets/hero_chain.svg</code>。）</span></figcaption>
+</figure>
+
+<figure class="fig">
+  <img src="assets/fig12_full_chain.png" alt="举重时的完整因果链：动机与指令、能量与分子、宏观结果三列并排">
+  <figcaption><b>图 12</b>　把这条链条拆成三列看得更清楚：左列是“动机与指令”（大脑 → 神经 → 钙离子 → 开关蛋白），中列是“能量与分子”（ATP 与三大供能系统 → 马达划桨 → 力叠加），右列是“宏观结果”（肌节缩短 → 肌肉收缩 → 骨骼杠杆 → 杠铃离地）。</figcaption>
+</figure>
+
+<h3>7.1 一次举重的能量账本（20 kg，举高 1 m）</h3>
+
+<figure class="fig">
+  <img src="assets/fig11_lift_energy_ledger.png" alt="一次举重的能量账本：从杠铃到 ATP 分子的六步计算">
+  <figcaption><b>图 11</b>　六步算出“举一次到底花了多少能量”。结论：对外有用功 196 J，肌肉内部还要做约 230 J 的额外功，
+  按 22% 效率反推，总代谢支出约 <b>1950 J ≈ 0.47 千卡</b>，需要水解约 <b>2.4×10²² 个 ATP</b>（约 20 微克，边用边造）。</figcaption>
+</figure>
+
+<table>
+  <caption>表 4　举重能量账本（完整版，便于核对每一步）</caption>
+  <tr><th>步骤</th><th>公式 / 数值</th><th>含义</th></tr>
+  <tr><td>① 对外有用功</td><td>W = mgh = 20 × 9.81 × 1 ≈ <b>196 J</b></td><td>外界能“看到”的唯一功</td></tr>
+  <tr><td>② 体内附加功（内耗）</td><td>≈ <b>230 J</b>（量级估算）</td><td>对抗肌肉自身弹性、黏性阻力；随动作与个体差异较大</td></tr>
+  <tr><td>③ 肌肉总机械功</td><td>196 + 230 ≈ <b>430 J</b></td><td>肌肉实际“搬动”的功</td></tr>
+  <tr><td>④ 代谢支出</td><td>430 ÷ 0.22 ≈ <b>1950 J</b></td><td>按肌肉做功效率约 22% 反推；其余约 1500 J 变热</td></tr>
+  <tr><td>⑤ 折算食物能量</td><td>1950 ÷ 4184 ≈ <b>0.47 千卡</b></td><td>约等于 1 粒花生米</td></tr>
+  <tr><td>⑥ 折算 ATP 分子数</td><td>1950 ÷ 8×10⁻²⁰ ≈ <b>2.4×10²² 个</b></td><td>约 20 微克 ATP，边水解边再合成</td></tr>
+  <tr><td>⑦ 稳住不动的 2 秒</td><td>对外做功 <b>0</b>，但代谢率仍在 100–300 J/s 量级</td><td>马达空循环、钙泵抽钙、钠钾泵补电位——“举着不动”更累</td></tr>
+</table>
+
+<div class="trap">
+  <b>常见疑惑：既然 ATP 只有 50 多克，怎么可能举一次就水解 2.4×10²² 个（约 20 微克）？</b><br>
+  不矛盾。20 微克只是“这一次动作期间被水解的总量”，它们是<b>流水</b>不是<b>库存</b>：磷酸肌酸与线粒体在几秒内不断把 ADP 重新充成 ATP，
+  就像一家店一天卖出几百杯咖啡，但店里同时只摆着十杯。
+</div>
+
+<h3>7.2 时间顺序：身体是怎么“零延迟”供能的</h3>
+<ol>
+  <li><b>0–3 秒：</b>直接水解现成 ATP（存量极小，几乎瞬间用完）。</li>
+  <li><b>3–10 秒：</b>磷酸肌酸把 ADP 迅速变回 ATP（“应急充电宝”），功率最高。</li>
+  <li><b>10 秒–2 分钟：</b>糖酵解接棒（无氧，产生乳酸，功率下降但仍可维持高强度）。</li>
+  <li><b>2 分钟后：</b>有氧氧化成为主力（线粒体烧糖和脂肪），功率最低但几乎无限续航，并负责把前面欠的“氧债”还清。</li>
+</ol>
+
+<!-- ================================================================= -->
+<h2 id="s8"><span class="num">08</span>与宏观世界的对应：功、功率、效率、热</h2>
+
+<p>这一节把细胞层面的数字与物理课本上的量一一对上。</p>
+
+<h3>8.1 概念对照表</h3>
+<table>
+  <caption>表 5　微观 ↔ 宏观对应关系</caption>
+  <tr><th>宏观概念</th><th>公式 / 单位</th><th>细胞层面的对应物</th></tr>
+  <tr><td>功（Work）</td><td>W = F·d，单位焦耳 J</td><td>肌球蛋白头出力 × 位移；大量马达做功之和</td></tr>
+  <tr><td>力（Force）</td><td>F，单位牛顿 N（1 N = 10¹² pN）</td><td>单个马达约 4 pN，靠并联叠加成 N 级</td></tr>
+  <tr><td>位移（Displacement）</td><td>d，单位米 m（1 m = 10⁹ nm）</td><td>单步 10 nm，靠串联肌节叠加成 m 级</td></tr>
+  <tr><td>功率（Power）</td><td>P = W/t，单位瓦 W</td><td>ATP 水解速率 × 每个 ATP 的功；瞬时可达 1–3 kW</td></tr>
+  <tr><td>能量（Energy）</td><td>E，单位 J；食物常用千卡 kcal（1 kcal = 4184 J）</td><td>ATP 水解自由能 ≈ 8×10⁻²⁰ J/个</td></tr>
+  <tr><td>效率（Efficiency）</td><td>η = 有用输出 ÷ 总输入</td><td>单马达约 30–50%，整块肌肉约 22%</td></tr>
+  <tr><td>热（Heat）</td><td>Q，单位 J</td><td>未被利用的自由能；肌肉约 78% 的代谢能变热</td></tr>
+  <tr><td>熵 / 第二定律</td><td>ΔS<sub>总</sub> ≥ 0</td><td>为什么效率永远不可能 100%：一部分自由能必然以热的形式耗散</td></tr>
+</table>
+
+<h3>8.2 效率对比：身体其实“不高效”，但很耐用</h3>
+
+<figure class="fig">
+  <img src="assets/fig09_efficiency.png" alt="各系统能量转换效率对比，以及一次举重的能量账本饼图">
+  <figcaption><b>图 9-b</b>　左：各类系统的能量转换效率。人体骨骼肌约 22%，低于柴油机（约 40%）和电动机（约 90%），但它能在体温下、用糖和脂肪、连续工作几十年并自我修复——这才是生物系统的真正优势。右：一次举重的能量去向：对外有用功仅约 10%，其余大部分变成热。</figcaption>
+</figure>
+
+<div class="key">
+  <b>为什么你必须出汗？</b>因为约 78% 的代谢能变成热。静息时人体产热约 80–120 W（相当于一只白炽灯泡），
+  剧烈运动时可升到 1000 W 以上。散热跟不上，体温就会上升——出汗和皮肤血管扩张，就是身体给这台“低效率发动机”配的冷却系统。
+</div>
+
+<h3>8.3 能量守恒怎么对上账</h3>
+<p>以一次 20 kg、1 m 的举重为例，输入与输出的完整对账：</p>
+<table>
+  <caption>表 6　能量守恒对账（以 1950 J 代谢支出为 100%）</caption>
+  <tr><th>项目</th><th>能量</th><th>占比</th><th>去哪了</th></tr>
+  <tr><td>对外有用功（举起杠铃）</td><td>196 J</td><td>≈ 10%</td><td>重力势能，松手后可转化为别的能量</td></tr>
+  <tr><td>体内机械“空转”功</td><td>≈ 230 J</td><td>≈ 12%</td><td>最终也变成热</td></tr>
+  <tr><td>代谢产热与内耗热</td><td>≈ 1520 J</td><td>≈ 78%</td><td>体温、汗液蒸发、血流</td></tr>
+  <tr><td><b>合计</b></td><td><b>≈ 1950 J</b></td><td><b>100%</b></td><td>不多不少，正好守恒</td></tr>
+</table>
+
+<div class="note">
+  <b>三个“必须记住的等号”：</b><br>
+  ① 能量守恒：吃进去的化学能 = 对外做的功 + 变成的热 + 暂时储存的能量。<br>
+  ② 功率 = 力 × 速度：这是为什么最大功率出现在中等速度和中等力度（图 6）。<br>
+  ③ 1 千卡（食物卡路里）= 4184 J：把细胞层面的“×10⁻²⁰ J”与餐桌上的“千卡”连接起来。
+</div>
+
+<!-- ================================================================= -->
+<h2 id="s9"><span class="num">09</span>常见误解与自测题</h2>
+
+<h3>9.1 六个常见误解</h3>
+
+<details>
+  <summary>误解 1：“肌肉收缩就是把肌纤维像弹簧一样压短。”</summary>
+  <p>不对。粗细肌丝本身长度几乎不变，变的是它们<b>重叠的多少</b>。证据：收缩时 A 带（粗肌丝区）长度不变，I 带和 H 区变窄（见图 4）。</p>
+</details>
+
+<details>
+  <summary>误解 2：“ATP 是燃料，烧掉就没了。”</summary>
+  <p>ATP 更像“充电电池/现金”：水解成 ADP + Pi 后，会被磷酸肌酸、糖酵解和有氧氧化迅速再充回 ATP。你每天周转的 ATP 约等于自己的体重。</p>
+</details>
+
+<details>
+  <summary>误解 3：“举着不动就不做功，所以不耗能量。”</summary>
+  <p>物理上对外不做功，但生理上仍在烧 ATP：马达空循环、钙泵持续抽钙、钠钾泵维持膜电位。这就是平板支撑和静力训练同样累人的原因。</p>
+</details>
+
+<details>
+  <summary>误解 4：“肌肉收缩是靠马达‘推’细丝，或者靠某种胶水黏住。”</summary>
+  <p>是靠马达“抓—拉—松”的循环：结合 ATP 使头部脱离，水解后头部“上膛”，再抓住细丝划桨约 70°。胶水（持续结合）恰恰是病理状态——尸僵。</p>
+</details>
+
+<details>
+  <summary>误解 5：“单个马达很强，所以肌肉有力。”</summary>
+  <p>恰恰相反：单个马达只有 4 pN（头发的两万五千分之一重）。肌肉的力量完全来自<b>数量</b>：并联叠力、串联叠位移。</p>
+</details>
+
+<details>
+  <summary>误解 6：“人体效率低，所以很浪费。”</summary>
+  <p>效率低是热力学的必然（第二定律）。生物系统的真正优势是可自我修复、可在常温常压工作、可用糖和脂肪作燃料、可连续运行几十年。工程系统“效率高”但需要机油、冷却和维修。</p>
+</details>
+
+<h3>9.2 自测题（先想再看答案）</h3>
+
+<details>
+  <summary>题 1　1 个 ATP 水解约放出 8×10⁻²⁰ J；一个肌球蛋白头一次划桨出力 4 pN、位移 10 nm。这次划桨的机械效率大约是多少？</summary>
+  <p>对外功 = 4×10⁻¹² N × 10×10⁻⁹ m = 4×10⁻²⁰ J。效率 = 4×10⁻²⁰ ÷ 8×10⁻²⁰ = <b>50%</b>（这是理想满载情况；实际负载不同会变化，整块肌肉因还有钙泵等开销，效率降到 20–25%）。</p>
+</details>
+
+<details>
+  <summary>题 2　全身 ATP 只有约 50 克，为什么剧烈运动能持续几秒到几十秒？</summary>
+  <p>因为 ATP 是“流水”不是“库存”。磷酸肌酸可以在几秒内把 ADP 迅速再磷酸化，糖酵解随后接力。ATP 周转量每天约 50–75 公斤，说明它被反复充放电上千次。</p>
+</details>
+
+<details>
+  <summary>题 3　把 10 kg 的箱子举高 0.5 m，对外做功多少？如果肌肉效率 22%，大约要消耗多少代谢能？折合多少千卡？</summary>
+  <p>W = 10 × 9.81 × 0.5 ≈ <b>49 J</b>；代谢能 ≈ 49 ÷ 0.22 ≈ <b>223 J</b>；折合 223 ÷ 4184 ≈ <b>0.053 千卡</b>（若算上体内附加功，实际会更高）。</p>
+</details>
+
+<details>
+  <summary>题 4　为什么举重时“憋住不动”比“快速举起”更容易发抖并很快力竭？</summary>
+  <p>等长收缩对外不做功，但马达仍在循环、钙泵和钠钾泵仍在耗 ATP，同时肌肉内压升高压迫血管导致供氧变差。也就是“收入没增加、支出照旧”，因此更快疲劳。</p>
+</details>
+
+<details>
+  <summary>题 5　如果全部肌肉的肌球蛋白头在同一瞬间都结合并出力，会产生多大力量？为什么实际做不到？</summary>
+  <p>粗算是 10¹⁷ × 4 pN ≈ 4×10⁵ N（几十吨的力）。实际做不到的原因：头部占空比很低（多数时间在“上膛/等待”）、方向分力损失、钙调控与代谢供能限制，因此实际最大张力约 300 kN/m²，整块肱二头肌约 200–400 N。</p>
+</details>
+
+<!-- ================================================================= -->
+<h2 id="s10"><span class="num">10</span>附录：数据速查表与资料来源</h2>
+
+<h3>10.1 关键数据速查</h3>
+<table>
+  <caption>表 7　常用数值（量级估算，用于建立直觉；不同来源与个体会有差异）</caption>
+  <tr><th>项目</th><th>数值</th></tr>
+  <tr><td>ATP 水解自由能（生理条件）</td><td>约 −50 kJ/mol ≈ 8×10⁻²⁰ J/分子</td></tr>
+  <tr><td>全身 ATP 存量 / 日周转量</td><td>约 50–60 克 / 约 50–75 公斤</td></tr>
+  <tr><td>人体细胞数</td><td>约 3.7×10¹³（37 万亿）</td></tr>
+  <tr><td>肌节静止长度 / 最短长度</td><td>约 2.2 µm / 约 1.6 µm</td></tr>
+  <tr><td>粗肌丝 / 细肌丝 / 微管直径</td><td>约 15 nm / 7 nm / 25 nm</td></tr>
+  <tr><td>肌球蛋白头单步 / 失速力</td><td>约 10 nm / 约 4 pN</td></tr>
+  <tr><td>驱动蛋白单步 / 失速力 / 速度</td><td>8 nm / 约 6–7 pN / 约 0.8 µm/s</td></tr>
+  <tr><td>肌肉最大张力</td><td>约 300 kN/m²（约 3 kg/cm²）</td></tr>
+  <tr><td>肱二头肌典型拉力</td><td>约 200–400 N</td></tr>
+  <tr><td>肌肉做功效率</td><td>约 20–25%</td></tr>
+  <tr><td>静息代谢功率</td><td>约 80–120 W（≈ 2000 千卡/天）</td></tr>
+  <tr><td>瞬时最大输出功率</td><td>约 1–3 kW（仅数秒）</td></tr>
+  <tr><td>1 千卡</td><td>= 4184 J</td></tr>
+</table>
+
+<h3>10.2 一句话总复习</h3>
+<div class="key">
+  <b>食物是存款，ATP 是现金，线粒体是 ATM；分子马达是手，肌丝是绳，肌节是绳结；</b><br>
+  一次“划桨”只有 10 纳米、4 皮牛、8×10⁻²⁰ 焦耳；把 10¹⁷ 只手并联、10⁵ 个肌节串联，再经肌腱与骨骼放大，
+  就变成举起 20 公斤、对外做功 196 J 的宏观动作——而其中约 78% 的能量，最终变成了让你出汗的热。
+</div>
+
+<h3>10.3 主要资料来源与延伸阅读</h3>
+<ul class="refs">
+  <li>Huxley, A. F. &amp; Niedergerke, R. (1954) <i>Structural changes in muscle during contraction</i>；Huxley, H. E. &amp; Hanson, J. (1954) —— 滑行学说的原始论文。</li>
+  <li>Hill, A. V. (1938) <i>The heat of shortening and the dynamic constants of muscle</i> —— 力–速度关系的经典来源。</li>
+  <li>Finer, J. T., Simmons, R. M. &amp; Spudich, J. A. (1994) <i>Single myosin molecule mechanics: piconewton forces and nanometre steps</i>, Nature —— 单分子力与步长的直接测量。</li>
+  <li>Kinosita, K. 等关于 F₁-ATP 合酶旋转与扭力的系列工作（Nature / Cell，1997–2000）。</li>
+  <li>Block, S. M.、Svoboda, K.、Vale, R. D. 等关于驱动蛋白步进与失速力的单分子研究。</li>
+  <li>Nelson, P. C. 等关于骨骼肌肌球蛋白头部密度与占空比的定量研究（用于“4 pN → 300 kN/m²”的自洽性核对）。</li>
+  <li>生理学与生物化学教材：<i>Guyton &amp; Hall Textbook of Medical Physiology</i>、<i>Lehninger Principles of Biochemistry</i>、<i>Alberts, Molecular Biology of the Cell</i>。</li>
+</ul>
+<p class="small">说明：文中所有“×10⁻²⁰ J”“4 pN”“10 nm”“22%”等数值都是量级估算，用于建立直觉与自洽核对，不作为精密测量值。</p>
+
+<hr class="soft">
+<p class="small">本文档为离线单文件网页，所有插图位于同目录的 <code>assets/</code> 文件夹内（PNG 为数据图，SVG 为结构示意图）。用浏览器打开即可阅读；也可用浏览器“打印 → 另存为 PDF”生成电子书版本。</p>
+
+</div>
+
+<script>
+(function () {
+  var KEY = 'erev-lang';
+  var DEF = 'zh';
+  function current() {
+    try { var v = localStorage.getItem(KEY); return (v === 'en' || v === 'zh') ? v : DEF; }
+    catch (e) { return DEF; }
+  }
+  function apply() {
+    var en = current() === 'en';
+    var nodes = document.querySelectorAll('svg text[data-en]');
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i];
+      var zh = el.getAttribute('data-zh'), e = el.getAttribute('data-en');
+      var want = en ? (e || zh) : (zh || e);
+      if (want && el.textContent !== want) el.textContent = want;
+    }
+    var bar = document.querySelector('.langbar');
+    if (bar) {
+      var links = bar.querySelectorAll('a');
+      for (var k = 0; k < links.length; k++) {
+        var isEn = /article-en/.test(links[k].getAttribute('href') || '');
+        links[k].className = (isEn === en) ? 'on' : '';
+      }
+    }
+  }
+  window.erevSetLang = function (l) { try { localStorage.setItem(KEY, l); } catch (e) {} apply(); };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', apply);
+  else apply();
+})();
+</script>
+
+<script>
+(function () {
+  var KEY = 'erev-lang';
+  var DEF = 'zh';
+  function current() {
+    try { var v = localStorage.getItem(KEY); return (v === 'en' || v === 'zh') ? v : DEF; }
+    catch (e) { return DEF; }
+  }
+  function apply() {
+    var en = current() === 'en';
+    var nodes = document.querySelectorAll('svg text[data-en]');
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i];
+      var zh = el.getAttribute('data-zh'), e = el.getAttribute('data-en');
+      var want = en ? (e || zh) : (zh || e);
+      if (want && el.textContent !== want) el.textContent = want;
+    }
+    var bar = document.querySelector('.langbar');
+    if (bar) {
+      var links = bar.querySelectorAll('a');
+      for (var k = 0; k < links.length; k++) {
+        var isEn = /article-en/.test(links[k].getAttribute('href') || '');
+        links[k].className = (isEn === en) ? 'on' : '';
+      }
+    }
+  }
+  window.erevSetLang = function (l) { try { localStorage.setItem(KEY, l); } catch (e) {} apply(); };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', apply);
+  else apply();
+})();
+</script>
+</body>
+</html>

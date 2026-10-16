@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640" font-family="Microsoft YaHei, SimSun, sans-serif">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d94f45"/>
+    </marker>
+    <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#9aa7b4"/>
+    </marker>
+    <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2f7fd1"/>
+    </marker>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#d94f45"/><stop offset="100%" stop-color="#7a5bd1"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="640" fill="#ffffff"/>
+  <text x="600" y="42" text-anchor="middle" font-size="27" font-weight="bold" fill="#1c2b3a" data-zh="从 1 个 ATP 分子到举起 100 公斤：一条被放大 10²⁰ 倍的因果链" data-en="From one ATP molecule to lifting 100 kg: a causal chain amplified 10^20 times">从 1 个 ATP 分子到举起 100 公斤：一条被放大 10²⁰ 倍的因果链</text>
+  <text x="600" y="72" text-anchor="middle" font-size="15" fill="#5b6b7c" data-zh="每一次分子级的“划桨”只有 10 纳米、4 皮牛的力；把 10¹⁷ 次这样的动作并联、串联起来，就是杠铃离地。" data-en="Each molecular stroke is only 10 nm and 4 pN; put 10^17 of them in parallel and series and the barbell leaves the floor.">每一次分子级的“划桨”只有 10 纳米、4 皮牛的力；把 10¹⁷ 次这样的动作并联、串联起来，就是杠铃离地。</text>
+
+  <!-- ============ 第 1 站：ATP ============ -->
+  <rect x="30" y="112" width="250" height="196" rx="14" fill="#fdeeec" stroke="#d94f45" stroke-width="2"/>
+  <text x="155" y="140" text-anchor="middle" font-size="16" font-weight="bold" fill="#d94f45" data-zh="① 化学能：1 个 ATP" data-en="1 Chemical energy: one ATP">① 化学能：1 个 ATP</text>
+  <circle cx="80" cy="190" r="15" fill="#7ac0e8" stroke="#1c2b3a"/>
+  <circle cx="120" cy="190" r="15" fill="#4a9bd6" stroke="#1c2b3a"/>
+  <circle cx="160" cy="190" r="15" fill="#d94f45" stroke="#1c2b3a"/>
+  <line x1="95" y1="190" x2="105" y2="190" stroke="#1c2b3a" stroke-width="3"/>
+  <line x1="135" y1="190" x2="145" y2="190" stroke="#1c2b3a" stroke-width="3"/>
+  <text x="80" y="196" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold">α</text>
+  <text x="120" y="196" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold">β</text>
+  <text x="160" y="196" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold">γ</text>
+  <text x="196" y="196" font-size="14" fill="#1c2b3a" data-zh="+ 腺苷" data-en="+ adenosine">+ 腺苷</text>
+  <text x="155" y="228" text-anchor="middle" font-size="14" fill="#1c2b3a">ATP + H₂O → ADP + Pi</text>
+  <text x="155" y="252" text-anchor="middle" font-size="14" fill="#d94f45" font-weight="bold" data-zh="释放 ≈ 8×10⁻²⁰ J" data-en="releases ~ 8x10^-20 J">释放 ≈ 8×10⁻²⁰ J</text>
+  <text x="155" y="278" text-anchor="middle" font-size="12" fill="#5b6b7c" data-zh="≈ 4 pN × 10 nm，够一次划桨" data-en="~ 4 pN x 10 nm: one stroke">≈ 4 pN × 10 nm，够一次划桨</text>
+  <text x="155" y="298" text-anchor="middle" font-size="12" fill="#5b6b7c" data-zh="（约一半变成热）" data-en="(about half becomes heat)">（约一半变成热）</text>
+
+  <line x1="283" y1="210" x2="325" y2="210" stroke="#9aa7b4" stroke-width="3" marker-end="url(#ag)"/>
+
+  <!-- ============ 第 2 站：肌球蛋白划桨 ============ -->
+  <rect x="330" y="112" width="330" height="196" rx="14" fill="#f4f0fd" stroke="#7a5bd1" stroke-width="2"/>
+  <text x="495" y="140" text-anchor="middle" font-size="16" font-weight="bold" fill="#7a5bd1" data-zh="② 分子马达：肌球蛋白头“划桨”" data-en="2 Molecular motor: the myosin head strokes">② 分子马达：肌球蛋白头“划桨”</text>
+  <!-- 细丝 -->
+  <line x1="360" y1="252" x2="630" y2="252" stroke="#2f7fd1" stroke-width="8" stroke-linecap="round"/>
+  <text x="495" y="276" text-anchor="middle" font-size="12" fill="#2f7fd1" data-zh="肌动蛋白细丝（粗 7 nm）" data-en="actin filament (7 nm)">肌动蛋白细丝（粗 7 nm）</text>
+  <!-- 粗肌丝 -->
+  <rect x="430" y="196" width="140" height="12" rx="6" fill="#7a5bd1"/>
+  <text x="592" y="184" font-size="12" fill="#7a5bd1" text-anchor="middle" data-zh="粗肌丝" data-en="thick filament">粗肌丝</text>
+  <!-- 三个带颈部的头部（绿色） -->
+  <g stroke="#3aa66b" stroke-width="4" fill="#3aa66b">
+    <line x1="446" y1="204" x2="452" y2="232"/>
+    <line x1="495" y1="204" x2="501" y2="232"/>
+    <line x1="544" y1="204" x2="550" y2="232"/>
+  </g>
+  <circle cx="453" cy="238" r="8" fill="#3aa66b" stroke="#1c2b3a"/>
+  <circle cx="502" cy="238" r="8" fill="#3aa66b" stroke="#1c2b3a"/>
+  <circle cx="551" cy="238" r="8" fill="#3aa66b" stroke="#1c2b3a"/>
+  <path d="M466,238 q10,-10 20,0" stroke="#d94f45" stroke-width="2.5" fill="none" marker-end="url(#ah)"/>
+  <text x="495" y="170" text-anchor="middle" font-size="12" fill="#3aa66b" data-zh="头部旋转约 70°，拖动细丝" data-en="the head rotates ~70 deg and pulls the filament">头部旋转约 70°，拖动细丝</text>
+  <text x="495" y="300" text-anchor="middle" font-size="13" fill="#1c2b3a" font-weight="bold" data-zh="每循环 1 个 ATP，走 10 nm，出力 4 pN" data-en="1 ATP per cycle, 10 nm per step, 4 pN of force">每循环 1 个 ATP，走 10 nm，出力 4 pN</text>
+
+  <line x1="663" y1="210" x2="705" y2="210" stroke="#9aa7b4" stroke-width="3" marker-end="url(#ag)"/>
+
+  <!-- ============ 第 3 站：肌节滑行 ============ -->
+  <rect x="710" y="112" width="210" height="196" rx="14" fill="#fff6ee" stroke="#e8833a" stroke-width="2"/>
+  <text x="815" y="140" text-anchor="middle" font-size="16" font-weight="bold" fill="#e8833a" data-zh="③ 肌节缩短" data-en="3 The sarcomere shortens">③ 肌节缩短</text>
+  <line x1="736" y1="182" x2="736" y2="262" stroke="#37474f" stroke-width="4"/>
+  <line x1="894" y1="182" x2="894" y2="262" stroke="#37474f" stroke-width="4"/>
+  <text x="736" y="176" text-anchor="middle" font-size="11" fill="#37474f" data-zh="Z 线" data-en="Z-disc">Z 线</text>
+  <text x="894" y="176" text-anchor="middle" font-size="11" fill="#37474f" data-zh="Z 线" data-en="Z-disc">Z 线</text>
+  <line x1="736" y1="206" x2="836" y2="206" stroke="#2f7fd1" stroke-width="5"/>
+  <line x1="794" y1="240" x2="894" y2="240" stroke="#2f7fd1" stroke-width="5"/>
+  <rect x="784" y="214" width="62" height="8" rx="4" fill="#7a5bd1"/>
+  <text x="815" y="286" text-anchor="middle" font-size="12" fill="#e8833a" font-weight="bold" data-zh="细丝滑向中央" data-en="the thin filament slides inward">细丝滑向中央</text>
+  <text x="815" y="300" text-anchor="middle" font-size="11" fill="#5b6b7c">2.2 µm → 1.6 µm</text>
+
+  <line x1="923" y1="210" x2="965" y2="210" stroke="#9aa7b4" stroke-width="3" marker-end="url(#ag)"/>
+
+  <!-- ============ 第 4 站：举起杠铃 ============ -->
+  <rect x="970" y="112" width="200" height="196" rx="14" fill="#eef3fb" stroke="#2f7fd1" stroke-width="2"/>
+  <text x="1070" y="140" text-anchor="middle" font-size="16" font-weight="bold" fill="#2f7fd1" data-zh="④ 宏观做功" data-en="4 Macroscopic work">④ 宏观做功</text>
+  <!-- 举重小人 -->
+  <g stroke="#1c2b3a" stroke-width="5" fill="none" stroke-linecap="round">
+    <circle cx="1070" cy="176" r="13" fill="#1c2b3a" stroke="none"/>
+    <line x1="1070" y1="189" x2="1070" y2="240"/>
+    <line x1="1070" y1="240" x2="1052" y2="272"/>
+    <line x1="1070" y1="240" x2="1088" y2="272"/>
+    <line x1="1070" y1="205" x2="1050" y2="182"/>
+    <line x1="1070" y1="205" x2="1090" y2="182"/>
+  </g>
+  <line x1="1026" y1="180" x2="1114" y2="180" stroke="#37474f" stroke-width="6"/>
+  <rect x="1018" y="166" width="14" height="28" rx="4" fill="#5b6b7c"/>
+  <rect x="1108" y="166" width="14" height="28" rx="4" fill="#5b6b7c"/>
+  <text x="1070" y="298" text-anchor="middle" font-size="12" fill="#2f7fd1" font-weight="bold" data-zh="对外做功 196 J" data-en="external work 196 J">对外做功 196 J</text>
+  <text x="1070" y="314" text-anchor="middle" font-size="11" fill="#5b6b7c">20 kg × 1 m</text>
+
+  <!-- ============ 下方：放大倍数与时间尺度 ============ -->
+  <rect x="30" y="340" width="1140" height="120" rx="14" fill="#f7f9fc" stroke="#dfe6ee"/>
+  <text x="600" y="368" text-anchor="middle" font-size="15" font-weight="bold" fill="#1c2b3a" data-zh="放大倍数一览（数量级估算，用于建立直觉）" data-en="Amplification at a glance (order-of-magnitude, for intuition)">放大倍数一览（数量级估算，用于建立直觉）</text>
+  <g font-size="13" fill="#1c2b3a">
+    <text x="60" y="398" data-zh="马达数量" data-en="number of motors">马达数量</text>
+    <text x="60" y="424" font-weight="bold" fill="#7a5bd1" data-zh="10¹⁷ 个肌球蛋白头" data-en="10^17 myosin heads">10¹⁷ 个肌球蛋白头</text>
+    <text x="330" y="398" data-zh="单步位移" data-en="step size">单步位移</text>
+    <text x="330" y="424" font-weight="bold" fill="#7a5bd1">10 nm = 10⁻⁸ m</text>
+    <text x="560" y="398" data-zh="串并联总位移" data-en="total displacement in series">串并联总位移</text>
+    <text x="560" y="424" font-weight="bold" fill="#7a5bd1" data-zh="10⁵ × 10 nm = 1 mm（肌节层）" data-en="10^5 x 10 nm = 1 mm (sarcomere level)">10⁵ × 10 nm = 1 mm（肌节层）</text>
+    <text x="900" y="398" data-zh="单马达力" data-en="force per motor">单马达力</text>
+    <text x="900" y="424" font-weight="bold" fill="#7a5bd1">4 pN = 4×10⁻¹² N</text>
+  </g>
+  <g font-size="13" fill="#1c2b3a">
+    <text x="60" y="450" data-zh="宏观结果：" data-en="Macroscopic result: ">宏观结果：</text>
+    <text x="145" y="450" fill="#2f7fd1" font-weight="bold" data-zh="1 块肱二头肌可产生 200–400 N 拉力，一次动作移动几十厘米——放大约 10¹² 倍（力）与 10⁷ 倍（位移）。" data-en="one biceps gives 200-400 N and moves tens of centimetres: about 10^12x in force and 10^7x in displacement.">1 块肱二头肌可产生 200–400 N 拉力，一次动作移动几十厘米——放大约 10¹² 倍（力）与 10⁷ 倍（位移）。</text>
+  </g>
+
+  <!-- 底部一句话 -->
+  <rect x="30" y="480" width="1140" height="130" rx="14" fill="#fdeeec" stroke="#d94f45" stroke-width="2"/>
+  <text x="600" y="512" text-anchor="middle" font-size="16" font-weight="bold" fill="#d94f45" data-zh="这就是全部秘密：不要指望 1 个马达举起杠铃" data-en="That is the whole secret: do not expect one motor to lift a barbell">这就是全部秘密：不要指望 1 个马达举起杠铃</text>
+  <text x="600" y="544" text-anchor="middle" font-size="14" fill="#1c2b3a" data-zh="ATP 提供“一次性付款”（约 8×10⁻²⁰ J），肌球蛋白头把它换成 10 nm 的位移和 4 pN 的力；" data-en="ATP pays once (about 8x10^-20 J); the myosin head turns it into 10 nm of movement and 4 pN of force;">ATP 提供“一次性付款”（约 8×10⁻²⁰ J），肌球蛋白头把它换成 10 nm 的位移和 4 pN 的力；</text>
+  <text x="600" y="570" text-anchor="middle" font-size="14" fill="#1c2b3a" data-zh="10¹⁷ 个这样的“付款”按同一方向并行、串联地累加，再经肌腱与骨骼的杠杆放大，就成为你看到的举重。" data-en="10^17 such payments add up in parallel and in series, and tendons and bones lever them into the lift you see.">10¹⁷ 个这样的“付款”按同一方向并行、串联地累加，再经肌腱与骨骼的杠杆放大，就成为你看到的举重。</text>
+  <text x="600" y="596" text-anchor="middle" font-size="13" fill="#5b6b7c" data-zh="能量守恒在这里完全成立：吃进去的化学能 = 对外做的功 + 变成的热（约 78% 变热，所以你会出汗）。" data-en="Energy is exactly conserved: chemical energy eaten = work done + heat released (about 78% becomes heat, hence the sweat).">能量守恒在这里完全成立：吃进去的化学能 = 对外做的功 + 变成的热（约 78% 变热，所以你会出汗）。</text>
+</svg>
