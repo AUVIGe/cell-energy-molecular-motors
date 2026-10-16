@@ -197,6 +197,15 @@
     .dock{gap:6px;padding:6px 8px}.dock .stat{display:none}
     .stage{grid-template-columns:1fr;grid-template-rows:1.2fr 1fr;height:92vh}
   }
+
+  .pagesLang{position:fixed;left:22px;bottom:calc(172px + 74px);z-index:12;display:flex;gap:6px;
+    align-items:center;pointer-events:auto}
+  .pagesLang a{display:inline-block;text-decoration:none;font-size:12px;line-height:1;
+    padding:6px 11px;border-radius:11px;border:1px solid rgba(150,190,235,.42);
+    background:rgba(10,18,30,.72);color:#cfe6ff;backdrop-filter:blur(6px)}
+  .pagesLang a.on{background:linear-gradient(135deg,rgba(47,127,209,.85),rgba(217,79,69,.75));
+    color:#fff;border-color:transparent}
+  @media (max-width:1020px){.pagesLang{bottom:auto;top:14px;left:14px}}
 </style>
 </head>
 <body>
@@ -206,15 +215,41 @@
   var q = location.search.match(/[?&]lang=(en|zh)/);
   var isZhPage = /(^|\/)zh\.html$/.test(location.pathname);
   var v = q ? q[1] : (isZhPage ? 'zh' : 'en');
-  try { localStorage.setItem('erev-lang', v); } catch (e) {}
   window.__EREV_LANG__ = v;
+  /* 立即把语言写进 localStorage，让 main.js 的 Lang.restore() 一开始就拿到正确语言 */
+  try { localStorage.setItem('erev-lang', v); } catch (e) {}
+  /* 同时提前改写 <html lang> 与页面标题，避免首屏中文闪现 */
+  document.documentElement.setAttribute('lang', v === 'zh' ? 'zh-CN' : 'en');
   window.erevSwitchLang = function (l) {
     try { localStorage.setItem('erev-lang', l); } catch (e) {}
     location.href = (l === 'zh') ? 'zh.html' : 'index.html';
   };
+  /* 顶层语言切换按钮（由构建脚本注入 HTML），高亮当前语言 */
+  document.addEventListener('DOMContentLoaded', function () {
+    var en = document.getElementById('langEn'), zh = document.getElementById('langZh');
+    if (!en || !zh) return;
+    en.className = (v === 'en') ? 'on' : '';
+    zh.className = (v === 'zh') ? 'on' : '';
+  });
+  /* 兜底：DOM 与脚本都就绪后，按当前语言强制重刷步骤栏与节点标签，
+     避免任何“先按默认语言建成、之后没刷新”的残留 */
+  function forceRelang() {
+    try { if (window.Lang && window.Lang.set) window.Lang.set(v); } catch (e) {}
+    if (v !== 'en' || !window.Lang || !window.Lang.stepShort) return;
+    var nav = document.getElementById('stepNav');
+    if (nav && nav.children) {
+      for (var i = 0; i < nav.children.length; i++) {
+        var b = nav.children[i];
+        var txt = (b.textContent || '').replace(/^\s*\d+\s*/, '');
+        var en = window.Lang.stepShort(i, txt);
+        if (en && txt !== en) b.innerHTML = '<i>' + (i + 1) + '</i>' + en;
+      }
+    }
+  }
+  window.addEventListener('load', function () { setTimeout(forceRelang, 120); });
 })();
 </script>
-
+<div class="pagesLang"><a id="langEn" href="index.html">EN</a><a id="langZh" href="zh.html">中文</a></div>
 <div id="app"></div>
 <div class="vignette"></div>
 <div class="scan"></div>
@@ -3219,7 +3254,9 @@
     halo.scale.setScalar(actual * 5.4);
     holder.add(halo);
 
-    var lab = labelTex(n.l, n.c);
+    /* 首次绘制就用当前语言（不能直接用 n.l，否则英文档下会残留中文） */
+    var labInfo = (global.Lang && global.Lang.node) ? global.Lang.node(n) : { l: n.l };
+    var lab = labelTex(labInfo.l, n.c);
     var sp = new T.Sprite(new T.SpriteMaterial({ map: lab.tex, transparent: true, opacity: .95,
       depthWrite: false, depthTest: false }));
     var baseH = Math.max(6.5, actual * .52);
@@ -3436,6 +3473,10 @@
   /* ============================================================
      7. 步骤
      ============================================================ */
+  /* 关键：先恢复语言偏好，再建步骤按钮与节点标签，否则它们会停留在默认语言 */
+  if (global.Lang && global.Lang.restore) global.Lang.restore();
+  if (global.Lang && global.Lang.set && global.__EREV_LANG__) global.Lang.set(global.__EREV_LANG__);
+  if (MODEL && MODEL.lang && global.Lang && global.Lang.speakLang) MODEL.lang(global.Lang.speakLang());
   var cur = -1, playing = false, stepTimer = null, focusSet = {};
   var nav = document.getElementById('stepNav');
   STEPS.forEach(function (s, i) {
@@ -3445,6 +3486,8 @@
     nav.appendChild(b);
     s.el = b;
   });
+  refreshStepNav();
+  updateNodeLabels();
 
   /** 当前讲解语言：英文档 → 用英文讲解；中文/双语档 → 中文讲解 */
   function speakLang() {
