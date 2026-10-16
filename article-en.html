@@ -853,5 +853,14 @@ no gears, no crankshaft, no piston. Three families are the most famous:</p>
   else apply();
 })();
 </script>
+
+<script>
+/* 长文页：固定语言（英文页恒英文，中文页恒中文），并同步给 3D 页的记忆 */
+(function () {
+  var v = 'en';
+  try { localStorage.setItem('erev-lang', v); } catch (e) {}
+  window.erevSetLang && window.erevSetLang(v);
+})();
+</script>
 </body>
 </html>

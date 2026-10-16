@@ -201,17 +201,16 @@
 </head>
 <body>
 <script>
-/* Pages 版语言路由：?lang=en / ?lang=zh 优先，其次 localStorage，英文为缺省 */
+/* Pages 版语言路由：index.html 恒为英文缺省，zh.html 恒为中文；?lang= 可显式指定 */
 (function () {
   var q = location.search.match(/[?&]lang=(en|zh)/);
-  if (q) { try { localStorage.setItem('erev-lang', q[1]); } catch (e) {} }
-  var v = null;
-  try { v = localStorage.getItem('erev-lang'); } catch (e) {}
-  if (v !== 'zh' && v !== 'en') { v = 'en'; try { localStorage.setItem('erev-lang', v); } catch (e) {} }
+  var isZhPage = /(^|\/)zh\.html$/.test(location.pathname);
+  var v = q ? q[1] : (isZhPage ? 'zh' : 'en');
+  try { localStorage.setItem('erev-lang', v); } catch (e) {}
   window.__EREV_LANG__ = v;
   window.erevSwitchLang = function (l) {
     try { localStorage.setItem('erev-lang', l); } catch (e) {}
-    location.replace(l === 'zh' ? 'zh.html' : 'index.html');
+    location.href = (l === 'zh') ? 'zh.html' : 'index.html';
   };
 })();
 </script>
